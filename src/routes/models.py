@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from ..types import ModelCard, ModelList
+from ..type import ModelCard, ModelList
 
 models_router = APIRouter(prefix="/models")
 

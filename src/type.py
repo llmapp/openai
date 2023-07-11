@@ -5,6 +5,7 @@ import time
 from pydantic import BaseModel, Field
 from typing import Any, Dict, List, Literal, Optional, Union
 
+
 class ModelCard(BaseModel):
     id: str
     object: str = "model"
