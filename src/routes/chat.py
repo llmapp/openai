@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException
 from typing import  List
 from sse_starlette.sse import ServerSentEvent, EventSourceResponse
 
+from ..utils.loader import get_model
 from ..types import ChatCompletionRequest, ChatCompletionResponse, ChatCompletionResponseChoice, ChatCompletionResponseStreamChoice, ChatMessage, DeltaMessage
 
 chat_router = APIRouter(prefix="/chat")
@@ -10,7 +11,7 @@ COMPLETION_CHUNK = "chat.completion.chunk"
 
 @chat_router.post("/completions", response_model=ChatCompletionResponse)
 async def completions(request: ChatCompletionRequest):
-    global model, tokenizer
+    model, tokenizer = get_model()
 
     if request.messages[-1].role != "user":
         raise HTTPException(status_code=400, detail="Invalid request")
@@ -41,7 +42,7 @@ async def completions(request: ChatCompletionRequest):
 
 
 async def predict(query: str, history: List[List[str]], model_id: str):
-    global model, tokenizer
+    model, tokenizer = get_model()
 
     choice_data = ChatCompletionResponseStreamChoice(
         index=0,
