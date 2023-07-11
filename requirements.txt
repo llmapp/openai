@@ -1,4 +1,10 @@
 fastapi
 python-dotenv
 python-jose
+sse-starlette
+torch>=2.0
+transformers==4.30.1
 uvicorn
+
+# for ChatGLM2-6B
+sentencepiece
