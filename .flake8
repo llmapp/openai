@@ -1,0 +1,3 @@
+[flake8]
+; Minimal configuration for Flake8 to work with Black.
+max-line-length = 120
