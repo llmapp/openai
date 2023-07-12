@@ -6,8 +6,10 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 
+from .llms import get_model
 from .routes.chat import chat_router
 from .routes.models import models_router
+from .utils.env import get_preload_llms
 from .utils.logger import get_logger
 from .utils.cors import add_cors_middleware
 
@@ -48,5 +50,10 @@ async def http_exception_handler(_, exception):
 
 
 if __name__ == '__main__':
+    preload_llms = get_preload_llms()
+    print("preloading models:", preload_llms)
+    for name in preload_llms:
+        get_model(name)
+
     import uvicorn
     uvicorn.run(api, host=os.environ['SERVER_HOST'], port=int(os.environ['SERVER_PORT']), workers=1)
