@@ -18,41 +18,9 @@ def chat(model, tokenizer, messages: List[ChatMessage]):
     return model.chat(tokenizer, query, history=history)
 
 
-def stream_chat(model, tokenizer, messages: List[ChatMessage], model_id: str):
+def stream_chat(model, tokenizer, messages: List[ChatMessage]):
     query, history = _seprate_messages(messages)
-
-    choice_data = ChatCompletionResponseStreamChoice(
-        index=0,
-        delta=DeltaMessage(role="assistant"),
-        finish_reason=None
-    )
-    chunk = ChatCompletionResponse(model=model_id, choices=[choice_data], object="chat.completion.chunk")
-    yield "{}".format(chunk.json(exclude_unset=True, ensure_ascii=False))
-
-    current_length = 0
-    for new_response, _ in model.stream_chat(tokenizer, query, history):
-        if len(new_response) == current_length:
-            continue
-
-        new_text = new_response[current_length:]
-        current_length = len(new_response)
-
-        choice_data = ChatCompletionResponseStreamChoice(
-            index=0,
-            delta=DeltaMessage(content=new_text),
-            finish_reason=None
-        )
-        chunk = ChatCompletionResponse(model=model_id, choices=[choice_data], object="chat.completion.chunk")
-        yield "{}".format(chunk.json(exclude_unset=True, ensure_ascii=False))
-
-    choice_data = ChatCompletionResponseStreamChoice(
-        index=0,
-        delta=DeltaMessage(),
-        finish_reason="stop"
-    )
-    chunk = ChatCompletionResponse(model=model_id, choices=[choice_data], object="chat.completion.chunk")
-    yield "{}".format(chunk.json(exclude_unset=True, ensure_ascii=False))
-    yield '[DONE]'
+    return model.stream_chat(tokenizer, query, history)
 
 
 def _seprate_messages(messages: List[ChatMessage]):

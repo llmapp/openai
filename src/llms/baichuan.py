@@ -21,6 +21,11 @@ def chat(model, tokenizer, messages: List[ChatMessage]):
     return response, None
 
 
+# TODO: Implement this
+def stream_chat(model, tokenizer, messages: List[ChatMessage]):
+    raise NotImplementedError()
+
+
 def _chat_message_to_baichuan_message(message: ChatMessage):
     return {
         "role": message.role if message.role == "assistant" else "user",  # "system" role is not supported by Baichuan

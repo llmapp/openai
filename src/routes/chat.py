@@ -5,8 +5,8 @@ from typing import List
 
 from ..llms import models, get_model
 from ..llms.chatglm import chat as chat_chatglm, stream_chat as stream_chat_chatglm
-from ..llms.baichuan import chat as chat_baichuan
-from ..type import ChatCompletionRequest, ChatCompletionResponse, ChatCompletionResponseChoice, ChatMessage
+from ..llms.baichuan import chat as chat_baichuan, stream_chat as stream_chat_baichuan
+from ..type import ChatCompletionRequest, ChatCompletionResponse, ChatCompletionResponseChoice, ChatCompletionResponseStreamChoice, ChatMessage, DeltaMessage
 
 
 chat_router = APIRouter(prefix="/chat")
@@ -58,6 +58,44 @@ def stream_chat(model_id: str, messages: List[ChatMessage]):
     do_stream_chat = None
     if model_type == "chatglm":
         do_stream_chat = stream_chat_chatglm
+    elif model_type == "baichuan":
+        do_stream_chat = stream_chat_baichuan
 
-    generate = do_stream_chat(model, tokenizer, messages, model_id)
-    return EventSourceResponse(generate, media_type="text/event-stream")
+    generate = do_stream_chat(model, tokenizer, messages)
+    predict = _predict(model_id, generate)
+    return EventSourceResponse(predict, media_type="text/event-stream")
+
+
+def _predict(model_id: str, generate):
+    choice_data = ChatCompletionResponseStreamChoice(
+        index=0,
+        delta=DeltaMessage(role="assistant"),
+        finish_reason=None
+    )
+    chunk = ChatCompletionResponse(model=model_id, choices=[choice_data], object="chat.completion.chunk")
+    yield "{}".format(chunk.json(exclude_unset=True, ensure_ascii=False))
+
+    current_length = 0
+    for new_response, _ in generate:
+        if len(new_response) == current_length:
+            continue
+
+        new_text = new_response[current_length:]
+        current_length = len(new_response)
+
+        choice_data = ChatCompletionResponseStreamChoice(
+            index=0,
+            delta=DeltaMessage(content=new_text),
+            finish_reason=None
+        )
+        chunk = ChatCompletionResponse(model=model_id, choices=[choice_data], object="chat.completion.chunk")
+        yield "{}".format(chunk.json(exclude_unset=True, ensure_ascii=False))
+
+    choice_data = ChatCompletionResponseStreamChoice(
+        index=0,
+        delta=DeltaMessage(),
+        finish_reason="stop"
+    )
+    chunk = ChatCompletionResponse(model=model_id, choices=[choice_data], object="chat.completion.chunk")
+    yield "{}".format(chunk.json(exclude_unset=True, ensure_ascii=False))
+    yield '[DONE]'
