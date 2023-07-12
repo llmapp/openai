@@ -1,8 +1,9 @@
+
 from fastapi import APIRouter, HTTPException
 from typing import List
-from sse_starlette.sse import ServerSentEvent, EventSourceResponse
+from sse_starlette.sse import EventSourceResponse
 
-from ..utils.loader import get_model
+from ..llms import get_model
 from ..type import ChatCompletionRequest, ChatCompletionResponse, ChatCompletionResponseChoice, ChatCompletionResponseStreamChoice, ChatMessage, DeltaMessage
 
 chat_router = APIRouter(prefix="/chat")
@@ -12,7 +13,7 @@ COMPLETION_CHUNK = "chat.completion.chunk"
 
 @chat_router.post("/completions", response_model=ChatCompletionResponse)
 async def completions(request: ChatCompletionRequest):
-    model, tokenizer = get_model()
+    model, tokenizer = get_model(request.model)
 
     if request.messages[-1].role != "user":
         raise HTTPException(status_code=400, detail="Invalid request")

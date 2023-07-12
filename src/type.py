@@ -3,7 +3,10 @@
 import time
 
 from pydantic import BaseModel, Field
-from typing import Any, Dict, List, Literal, Optional, Union
+from typing import List, Literal, Optional, Union
+
+
+Role = Literal["user", "assistant", "system", "function"]
 
 
 class ModelCard(BaseModel):
@@ -22,28 +25,49 @@ class ModelList(BaseModel):
 
 
 class ChatMessage(BaseModel):
-    role: Literal["user", "assistant", "system"]
+    role: Role
     content: str
 
 
 class DeltaMessage(BaseModel):
-    role: Optional[Literal["user", "assistant", "system"]] = None
+    role: Optional[Role] = None
     content: Optional[str] = None
+
+
+class ChatFunction(BaseModel):
+    name: str
+    description: Optional[str] = None
+    parameters: dict
 
 
 class ChatCompletionRequest(BaseModel):
     model: str
     messages: List[ChatMessage]
     temperature: Optional[float] = None
-    top_p: Optional[float] = None
-    max_length: Optional[int] = None
+    top_p: Optional[float] = 1
     stream: Optional[bool] = False
+
+    functions: Optional[List[ChatFunction]] = None
+    function_call: Optional[str] = None
+    n: Optional[int] = 1
+    stop: Optional[List[str]] = None
+    max_tokens: Optional[int] = None
+    presence_penalty: Optional[float] = 0
+    frequnecy_penalty: Optional[float] = 0
+    logit_bias: Optional[dict] = None
+    user: Optional[str] = None
 
 
 class ChatCompletionResponseChoice(BaseModel):
     index: int
     message: ChatMessage
     finish_reason: Literal["stop", "length"]
+
+
+class ChatCompletionResponseUsage(BaseModel):
+    prompt_tokens: int
+    completion_tokens: int
+    total_tokens: int
 
 
 class ChatCompletionResponseStreamChoice(BaseModel):
@@ -55,5 +79,6 @@ class ChatCompletionResponseStreamChoice(BaseModel):
 class ChatCompletionResponse(BaseModel):
     model: str
     object: Literal["chat.completion", "chat.completion.chunk"]
-    choices: List[Union[ChatCompletionResponseChoice, ChatCompletionResponseStreamChoice]]
     created: Optional[int] = Field(default_factory=lambda: int(time.time()))
+    choices: List[Union[ChatCompletionResponseChoice, ChatCompletionResponseStreamChoice]]
+    usage: Optional[ChatCompletionResponseUsage] = None

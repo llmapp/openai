@@ -5,11 +5,9 @@ from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
-from transformers import AutoTokenizer, AutoModel
 
 from .routes.chat import chat_router
 from .routes.models import models_router
-from .utils.loader import load_model
 from .utils.logger import get_logger
 from .utils.cors import add_cors_middleware
 
@@ -50,7 +48,5 @@ async def http_exception_handler(_, exception):
 
 
 if __name__ == '__main__':
-    load_model(os.environ['MODEL_NAME'])
-
     import uvicorn
-    uvicorn.run(api, host='0.0.0.0', port=18000, workers=1)
+    uvicorn.run(api, host=os.environ['SERVER_HOST'], port=int(os.environ['SERVER_PORT']), workers=1)
