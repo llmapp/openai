@@ -16,7 +16,7 @@ class ModelCard(BaseModel):
     owned_by: str = "owner"
     root: Optional[str] = None
     parent: Optional[str] = None
-    permission: Optional[list] = None
+    permission: Optional[list] = []
 
 
 class ModelList(BaseModel):
@@ -45,13 +45,13 @@ class ChatCompletionRequest(BaseModel):
     messages: List[ChatMessage]
     temperature: Optional[float] = None
     top_p: Optional[float] = 1
+    n: Optional[int] = 1
+    max_tokens: Optional[int] = None
     stream: Optional[bool] = False
 
     functions: Optional[List[ChatFunction]] = None
     function_call: Optional[str] = None
-    n: Optional[int] = 1
     stop: Optional[List[str]] = None
-    max_tokens: Optional[int] = None
     presence_penalty: Optional[float] = 0
     frequnecy_penalty: Optional[float] = 0
     logit_bias: Optional[dict] = None
@@ -64,21 +64,30 @@ class ChatCompletionResponseChoice(BaseModel):
     finish_reason: Literal["stop", "length"]
 
 
+class ChatCompletionResponseStreamChoice(BaseModel):
+    index: int
+    delta: DeltaMessage
+    finish_reason: Optional[Literal["stop", "length"]] = None
+
+
 class ChatCompletionResponseUsage(BaseModel):
     prompt_tokens: int
     completion_tokens: int
     total_tokens: int
 
 
-class ChatCompletionResponseStreamChoice(BaseModel):
-    index: int
-    delta: DeltaMessage
-    finish_reason: Optional[Literal["stop", "length"]]
-
-
 class ChatCompletionResponse(BaseModel):
+    id: Optional[str] = None
     model: str
     object: Literal["chat.completion", "chat.completion.chunk"]
     created: Optional[int] = Field(default_factory=lambda: int(time.time()))
     choices: List[Union[ChatCompletionResponseChoice, ChatCompletionResponseStreamChoice]]
     usage: Optional[ChatCompletionResponseUsage] = None
+
+
+class ChatCompletionStreamResponse(BaseModel):
+    id: Optional[str] = "chatcmpl-default"
+    model: str
+    object: Literal["chat.completion.chunk"]
+    created: Optional[int] = Field(default_factory=lambda: int(time.time()))
+    choices: List[ChatCompletionResponseStreamChoice]

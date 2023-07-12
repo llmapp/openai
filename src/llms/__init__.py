@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from transformers import AutoTokenizer, AutoModel
 from typing import Any, List
 
 from .chatglm import load_model as load_chatglm
@@ -19,11 +18,11 @@ class LLM(BaseModel):
     model: Any
 
 
-llms: List[LLM] = []
-
-
 def get_models():
     return list(models.keys())
+
+
+llms: List[LLM] = []
 
 
 def get_model(model_id: str):
@@ -40,8 +39,6 @@ def get_model(model_id: str):
             model, tokenizer = load_chatglm(model_id)
         if model_type == "baichuan":
             model, tokenizer = load_baichuan(model_id)
-        if (model is None or tokenizer is None):
-            raise ValueError(f"Model {model_id} not found")
 
         llm = LLM(id=model_id, tokenizer=tokenizer, model=model)
         llms.append(llm)

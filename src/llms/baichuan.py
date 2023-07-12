@@ -1,6 +1,9 @@
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from transformers.generation.utils import GenerationConfig
+from typing import List
+
+from ..type import ChatMessage
 
 
 def load_model(model_id: str):
@@ -10,3 +13,16 @@ def load_model(model_id: str):
     model.generation_config = GenerationConfig.from_pretrained(model_id)
 
     return model, tokenizer
+
+
+def chat(model, tokenizer, messages: List[ChatMessage]):
+    msgs = [_chat_message_to_baichuan_message(m) for m in messages]
+    response = model.chat(tokenizer, msgs)
+    return response, None
+
+
+def _chat_message_to_baichuan_message(message: ChatMessage):
+    return {
+        "role": message.role if message.role == "assistant" else "user",  # "system" role is not supported by Baichuan
+        "content": message.content
+    }
