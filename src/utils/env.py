@@ -5,7 +5,7 @@ load_dotenv()
 
 
 def get_preload_llms():
-    names = os.environ.get("PRELOAD_LLMS")
+    names = os.environ.get("LLMS_PRELOAD")
     if names is None or names.strip() == "":
         return []
 

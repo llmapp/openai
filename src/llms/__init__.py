@@ -1,3 +1,6 @@
+import os
+
+from dotenv import load_dotenv
 from pydantic import BaseModel
 from typing import Any, List
 
@@ -13,6 +16,14 @@ models = {
     "internlm/internlm-chat-7b-8k": "internlm",
     "baichuan-inc/Baichuan-13B-Chat": "baichuan"
 }
+
+load_dotenv()
+LLMS_DISABLED = os.environ.get("LLMS_DISABLED")
+if LLMS_DISABLED is not None and LLMS_DISABLED.strip() != "":
+    for name in [name.strip() for name in LLMS_DISABLED.split(",")]:
+        del models[name]
+
+print(models)
 
 
 class LLM(BaseModel):

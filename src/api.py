@@ -34,7 +34,7 @@ add_cors_middleware(api)
 async def startup_event():
     print("Starting up...")
 
-prefix = os.environ['API_PREFIX']
+prefix = os.environ.get('API_PREFIX', "/api/v1")
 api.include_router(chat_router, prefix=prefix, tags=["Chat"])
 api.include_router(models_router, prefix=prefix, tags=["Models"])
 
@@ -56,4 +56,8 @@ if __name__ == '__main__':
         get_model(name)
 
     import uvicorn
-    uvicorn.run(api, host=os.environ['SERVER_HOST'], port=int(os.environ['SERVER_PORT']), workers=1)
+    uvicorn.run(api,
+                host=os.environ.get('SERVER_HOST', '0.0.0.0'),
+                port=int(os.environ.get('SERVER_PORT', 8000)),
+                workers=1
+                )
