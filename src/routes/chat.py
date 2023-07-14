@@ -4,8 +4,9 @@ from sse_starlette.sse import EventSourceResponse
 from typing import List
 
 from ..llms import models, get_model
-from ..llms.chatglm import chat as chat_chatglm, stream_chat as stream_chat_chatglm
 from ..llms.baichuan import chat as chat_baichuan, stream_chat as stream_chat_baichuan
+from ..llms.chatglm import chat as chat_chatglm, stream_chat as stream_chat_chatglm
+from ..llms.internlm import chat as chat_internlm, stream_chat as stream_chat_internlm
 from ..type import ChatCompletionRequest, ChatCompletionResponse, ChatCompletionResponseChoice, ChatCompletionResponseStreamChoice, ChatMessage, DeltaMessage
 
 
@@ -35,6 +36,8 @@ def chat(model_id: str, messages: List[ChatMessage]):
         do_chat = chat_chatglm
     if model_type == "baichuan":
         do_chat = chat_baichuan
+    if model_type == "internlm":
+        do_chat = chat_internlm
 
     response, _ = do_chat(model, tokenizer, messages)
 
@@ -58,6 +61,8 @@ def stream_chat(model_id: str, messages: List[ChatMessage]):
         do_stream_chat = stream_chat_chatglm
     elif model_type == "baichuan":
         do_stream_chat = stream_chat_baichuan
+    elif model_type == "internlm":
+        do_stream_chat = stream_chat_internlm
 
     generate = do_stream_chat(model, tokenizer, messages)
     predict = _predict(model_id, generate)
@@ -69,10 +74,13 @@ def _predict(model_id: str, generate):
 
     current_length = 0
     for response in generate:
-        if type(response) is tuple:
+        response_type = type(response)
+        if response_type is str:
+            new_response = response
+        elif response_type is tuple:
             new_response, _ = response
         else:
-            new_response = response
+            break
 
         if len(new_response) == current_length:
             continue

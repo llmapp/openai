@@ -1,15 +1,16 @@
 from pydantic import BaseModel
 from typing import Any, List
 
-from .chatglm import load_model as load_chatglm
 from .baichuan import load_model as load_baichuan
+from .chatglm import load_model as load_chatglm
+from .internlm import load_model as load_internlm
 
 
 models = {
     "THUDM/chatglm-6b": "chatglm",
     "THUDM/chatglm2-6b": "chatglm",
-    # "internlm/internlm-chat-7b": "chatglm",
-    # "internlm/internlm-chat-7b-8k": "chatglm",
+    "internlm/internlm-chat-7b": "internlm",
+    "internlm/internlm-chat-7b-8k": "internlm",
     "baichuan-inc/Baichuan-13B-Chat": "baichuan"
 }
 
@@ -41,6 +42,8 @@ def get_model(model_id: str):
             model, tokenizer = load_chatglm(model_id)
         if model_type == "baichuan":
             model, tokenizer = load_baichuan(model_id)
+        if model_type == "internlm":
+            model, tokenizer = load_internlm(model_id)
 
         llm = LLM(id=model_id, tokenizer=tokenizer, model=model)
         llms.append(llm)
