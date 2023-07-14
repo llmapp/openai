@@ -3,7 +3,7 @@
 import time
 
 from pydantic import BaseModel, Field
-from typing import List, Literal, Optional, Union
+from typing import Any, Dict, List, Literal, Optional, Union
 
 
 Role = Literal["user", "assistant", "system", "function"]
@@ -40,6 +40,23 @@ class ChatFunction(BaseModel):
     parameters: dict
 
 
+class CompletionRequest(BaseModel):
+    model: str
+    prompt: Union[str, List[str]]
+    suffix: Optional[str] = None
+    temperature: Optional[float] = 0.7
+    n: Optional[int] = 1
+    max_tokens: Optional[int] = None
+    stop: Optional[Union[str, List[str]]] = None
+    stream: Optional[bool] = False
+    top_p: Optional[float] = 1.0
+    logprobs: Optional[int] = None
+    echo: Optional[bool] = False
+    presence_penalty: Optional[float] = 0.0
+    frequency_penalty: Optional[float] = 0.0
+    user: Optional[str] = None
+
+
 class ChatCompletionRequest(BaseModel):
     model: str
     messages: List[ChatMessage]
@@ -71,9 +88,10 @@ class ChatCompletionResponseStreamChoice(BaseModel):
 
 
 class ChatCompletionResponseUsage(BaseModel):
-    prompt_tokens: int
-    completion_tokens: int
-    total_tokens: int
+    prompt_tokens: int = 0
+    total_tokens: int = 0
+    completion_tokens: Optional[int] = 0
+    first_tokens: Optional[Any] = None
 
 
 class ChatCompletionResponse(BaseModel):
@@ -91,3 +109,17 @@ class ChatCompletionStreamResponse(BaseModel):
     object: Literal["chat.completion.chunk"]
     created: Optional[int] = Field(default_factory=lambda: int(time.time()))
     choices: List[ChatCompletionResponseStreamChoice]
+
+
+class EmbeddingsRequest(BaseModel):
+    model: Optional[str] = None
+    engine: Optional[str] = None
+    input: Union[str, List[Any]]
+    user: Optional[str] = None
+
+
+class EmbeddingsResponse(BaseModel):
+    object: str = "list"
+    data: List[Dict[str, Any]]
+    model: str
+    usage: Optional[ChatCompletionResponseUsage] = None

@@ -13,6 +13,8 @@ def load_model(model_id: str):
     return model, tokenizer
 
 
+# stop=["<|User|>", "<|Bot|>", "<eoa>"]
+
 def chat(model, tokenizer, messages: List[ChatMessage]):
     query, history = seprate_messages(messages)
     return model.chat(tokenizer, query, history=history)
@@ -20,4 +22,4 @@ def chat(model, tokenizer, messages: List[ChatMessage]):
 
 def stream_chat(model, tokenizer, messages: List[ChatMessage]):
     query, history = seprate_messages(messages)
-    return model.stream_chat(tokenizer, query, history)
+    return model.stream_chat(tokenizer, query, history=history)

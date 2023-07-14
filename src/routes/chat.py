@@ -14,7 +14,7 @@ chat_router = APIRouter(prefix="/chat")
 
 
 @chat_router.post("/completions", response_model=ChatCompletionResponse)
-async def completions(request: ChatCompletionRequest):
+async def chat_completions(request: ChatCompletionRequest):
     if request.messages[-1].role != "user":
         raise HTTPException(status_code=400, detail="Invalid request")
 
