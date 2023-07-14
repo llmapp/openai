@@ -23,7 +23,9 @@ def chat(model, tokenizer, messages: List[ChatMessage]):
 
 # TODO: Implement this
 def stream_chat(model, tokenizer, messages: List[ChatMessage]):
-    raise NotImplementedError()
+    msgs = [_chat_message_to_baichuan_message(m) for m in messages]
+    response = model.chat(tokenizer, msgs, stream=True)
+    return response
 
 
 def _chat_message_to_baichuan_message(message: ChatMessage):

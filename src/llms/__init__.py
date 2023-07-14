@@ -8,8 +8,8 @@ from .baichuan import load_model as load_baichuan
 models = {
     "THUDM/chatglm-6b": "chatglm",
     "THUDM/chatglm2-6b": "chatglm",
-    "internlm/internlm-chat-7b": "chatglm",
-    "internlm/internlm-chat-7b-8k": "chatglm",
+    # "internlm/internlm-chat-7b": "chatglm",
+    # "internlm/internlm-chat-7b-8k": "chatglm",
     "baichuan-inc/Baichuan-13B-Chat": "baichuan"
 }
 

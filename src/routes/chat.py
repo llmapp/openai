@@ -11,8 +11,6 @@ from ..type import ChatCompletionRequest, ChatCompletionResponse, ChatCompletion
 
 chat_router = APIRouter(prefix="/chat")
 
-COMPLETION_CHUNK = "chat.completion.chunk"
-
 
 @chat_router.post("/completions", response_model=ChatCompletionResponse)
 async def completions(request: ChatCompletionRequest):
@@ -67,35 +65,32 @@ def stream_chat(model_id: str, messages: List[ChatMessage]):
 
 
 def _predict(model_id: str, generate):
-    choice_data = ChatCompletionResponseStreamChoice(
-        index=0,
-        delta=DeltaMessage(role="assistant"),
-        finish_reason=None
-    )
-    chunk = ChatCompletionResponse(model=model_id, choices=[choice_data], object="chat.completion.chunk")
-    yield "{}".format(chunk.json(exclude_unset=True, ensure_ascii=False))
+    yield _compose_chunk(model_id, DeltaMessage(role="assistant"))
 
     current_length = 0
-    for new_response, _ in generate:
+    for response in generate:
+        if type(response) is tuple:
+            new_response, _ = response
+        else:
+            new_response = response
+
         if len(new_response) == current_length:
             continue
 
-        new_text = new_response[current_length:]
+        yield _compose_chunk(model_id, DeltaMessage(content=new_response[current_length:]))
+
         current_length = len(new_response)
 
-        choice_data = ChatCompletionResponseStreamChoice(
-            index=0,
-            delta=DeltaMessage(content=new_text),
-            finish_reason=None
-        )
-        chunk = ChatCompletionResponse(model=model_id, choices=[choice_data], object="chat.completion.chunk")
-        yield "{}".format(chunk.json(exclude_unset=True, ensure_ascii=False))
+    yield _compose_chunk(model_id, DeltaMessage())
+    yield '[DONE]'
 
+
+def _compose_chunk(model_id: str, message: DeltaMessage):
     choice_data = ChatCompletionResponseStreamChoice(
         index=0,
-        delta=DeltaMessage(),
+        delta=message,
         finish_reason="stop"
     )
     chunk = ChatCompletionResponse(model=model_id, choices=[choice_data], object="chat.completion.chunk")
-    yield "{}".format(chunk.json(exclude_unset=True, ensure_ascii=False))
-    yield '[DONE]'
+
+    return "{}".format(chunk.json(exclude_unset=True, ensure_ascii=False))
