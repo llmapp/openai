@@ -4,9 +4,6 @@ from sse_starlette.sse import EventSourceResponse
 from typing import List
 
 from ..llms import models, get_model
-from ..llms.baichuan import chat as chat_baichuan, stream_chat as stream_chat_baichuan
-from ..llms.chatglm import chat as chat_chatglm, stream_chat as stream_chat_chatglm
-from ..llms.internlm import chat as chat_internlm, stream_chat as stream_chat_internlm
 from ..type import ChatCompletionRequest, ChatCompletionResponse, ChatCompletionResponseChoice, ChatCompletionResponseStreamChoice, ChatMessage, DeltaMessage
 
 
@@ -25,21 +22,13 @@ async def chat_completions(request: ChatCompletionRequest):
 
 
 def chat(model_id: str, messages: List[ChatMessage]):
-    model_type = models.get(model_id)
-    if model_type is None:
+    handlers = models.get(model_id)
+    if handlers is None:
         raise ValueError(f"Model {model_id} not found")
 
     model, tokenizer = get_model(model_id)
 
-    do_chat = None
-    if model_type == "chatglm":
-        do_chat = chat_chatglm
-    if model_type == "baichuan":
-        do_chat = chat_baichuan
-    if model_type == "internlm":
-        do_chat = chat_internlm
-
-    response, _ = do_chat(model, tokenizer, messages)
+    response, _ = handlers.get("chat")(model, tokenizer, messages)
 
     choice_data = ChatCompletionResponseChoice(
         index=0,
@@ -50,21 +39,13 @@ def chat(model_id: str, messages: List[ChatMessage]):
 
 
 def stream_chat(model_id: str, messages: List[ChatMessage]):
-    model_type = models.get(model_id)
-    if model_type is None:
+    handlers = models.get(model_id)
+    if handlers is None:
         raise ValueError(f"Model {model_id} not found")
 
     model, tokenizer = get_model(model_id)
 
-    do_stream_chat = None
-    if model_type == "chatglm":
-        do_stream_chat = stream_chat_chatglm
-    elif model_type == "baichuan":
-        do_stream_chat = stream_chat_baichuan
-    elif model_type == "internlm":
-        do_stream_chat = stream_chat_internlm
-
-    generate = do_stream_chat(model, tokenizer, messages)
+    generate = handlers.get("stream_chat")(model, tokenizer, messages)
     predict = _predict(model_id, generate)
     return EventSourceResponse(predict, media_type="text/event-stream")
 

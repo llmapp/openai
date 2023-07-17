@@ -4,26 +4,25 @@ from dotenv import load_dotenv
 from pydantic import BaseModel
 from typing import Any, List
 
-from .baichuan import load_model as load_baichuan
-from .chatglm import load_model as load_chatglm
-from .internlm import load_model as load_internlm
+from .baichuan import HANDLERS as BAICHUAN_HANDLERS
+from .chatglm import HANDLERS as CHATGLM_HANDLERS
+from .internlm import HANDLERS as INTERNLM_HANDLERS
 
 
 models = {
-    "THUDM/chatglm-6b": "chatglm",
-    "THUDM/chatglm2-6b": "chatglm",
-    "internlm/internlm-chat-7b": "internlm",
-    "internlm/internlm-chat-7b-8k": "internlm",
-    "baichuan-inc/Baichuan-13B-Chat": "baichuan"
+    "chatglm-6b": CHATGLM_HANDLERS,
+    "chatglm2-6b": CHATGLM_HANDLERS,
+    "internlm-chat-7b": INTERNLM_HANDLERS,
+    "internlm-chat-7b-8k": INTERNLM_HANDLERS,
+    "Baichuan-13B-Chat": BAICHUAN_HANDLERS,
 }
 
 load_dotenv()
 LLMS_DISABLED = os.environ.get("LLMS_DISABLED")
 if LLMS_DISABLED is not None and LLMS_DISABLED.strip() != "":
     for name in [name.strip() for name in LLMS_DISABLED.split(",")]:
-        del models[name]
-
-print(models)
+        if name in models:
+            del models[name]
 
 
 class LLM(BaseModel):
@@ -48,13 +47,8 @@ def get_model(model_id: str):
     llm = next((l for l in llms if l.id == model_id), None)
 
     if llm is None:
-        model_type = models.get(model_id)
-        if model_type == "chatglm":
-            model, tokenizer = load_chatglm(model_id)
-        if model_type == "baichuan":
-            model, tokenizer = load_baichuan(model_id)
-        if model_type == "internlm":
-            model, tokenizer = load_internlm(model_id)
+        handlers = models.get(model_id)
+        model, tokenizer = handlers.get("load")(model_id)
 
         llm = LLM(id=model_id, tokenizer=tokenizer, model=model)
         llms.append(llm)

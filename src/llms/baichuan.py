@@ -6,7 +6,11 @@ from typing import List
 from ..type import ChatMessage
 
 
-def load_model(model_id: str):
+MODEL_PREFIX = "baichuan-inc/"
+
+
+def _load_model(model_name: str):
+    model_id = model_name if model_name.startswith(MODEL_PREFIX) else MODEL_PREFIX + model_name
     tokenizer = AutoTokenizer.from_pretrained(model_id, use_fast=False, trust_remote_code=True)
     model = AutoModelForCausalLM.from_pretrained(
         model_id, device_map="auto", torch_dtype=torch.float16, trust_remote_code=True)
@@ -15,20 +19,23 @@ def load_model(model_id: str):
     return model, tokenizer
 
 
-def chat(model, tokenizer, messages: List[ChatMessage]):
-    msgs = [_chat_message_to_baichuan_message(m) for m in messages]
+def _chat(model, tokenizer, messages: List[ChatMessage]):
+    msgs = [__chat_message_to_baichuan_message(m) for m in messages]
     response = model.chat(tokenizer, msgs)
     return response, None
 
 
-def stream_chat(model, tokenizer, messages: List[ChatMessage]):
-    msgs = [_chat_message_to_baichuan_message(m) for m in messages]
+def _stream_chat(model, tokenizer, messages: List[ChatMessage]):
+    msgs = [__chat_message_to_baichuan_message(m) for m in messages]
     response = model.chat(tokenizer, msgs, stream=True)
     return response
 
 
-def _chat_message_to_baichuan_message(message: ChatMessage):
+def __chat_message_to_baichuan_message(message: ChatMessage):
     return {
         "role": message.role if message.role == "assistant" else "user",  # "system" role is not supported by Baichuan
         "content": message.content
     }
+
+
+HANDLERS = {"load": _load_model, "chat": _chat, "stream_chat": _stream_chat}
