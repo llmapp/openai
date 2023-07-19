@@ -27,7 +27,7 @@ def _chat(model, tokenizer, messages: List[ChatMessage]):
 
 def _stream_chat(model, tokenizer, messages: List[ChatMessage]):
     query, history = seprate_messages(messages)
-    return model.stream_chat(tokenizer, query, history)
+    return model.stream_chat(tokenizer, query, history), "tuple"
 
 
 HANDLERS = {"load": _load_model, "chat": _chat, "stream_chat": _stream_chat}

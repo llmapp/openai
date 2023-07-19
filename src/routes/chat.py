@@ -45,30 +45,32 @@ def stream_chat(model_id: str, messages: List[ChatMessage]):
 
     model, tokenizer = get_model(model_id)
 
-    generate = handlers.get("stream_chat")(model, tokenizer, messages)
-    predict = _predict(model_id, generate)
+    generate, stream_type = handlers.get("stream_chat")(model, tokenizer, messages)
+    predict = _predict(model_id, generate, stream_type)
     return EventSourceResponse(predict, media_type="text/event-stream")
 
 
-def _predict(model_id: str, generate):
+def _predict(model_id: str, generate, stream_type: str):
     yield _compose_chunk(model_id, DeltaMessage(role="assistant"))
 
     current_length = 0
     for response in generate:
-        response_type = type(response)
-        if response_type is str:
-            new_response = response
-        elif response_type is tuple:
-            new_response, _ = response
+        if stream_type == "delta":
+            delta = response
         else:
-            break
+            if stream_type == "tuple":
+                new_response, _ = response
+            elif stream_type == "string":
+                new_response = response
 
-        if len(new_response) == current_length:
-            continue
+            if len(new_response) == current_length:
+                continue
 
-        yield _compose_chunk(model_id, DeltaMessage(content=new_response[current_length:]))
+            delta = new_response[current_length:]
 
-        current_length = len(new_response)
+            current_length = len(new_response)
+
+        yield _compose_chunk(model_id, DeltaMessage(content=delta))
 
     yield _compose_chunk(model_id, DeltaMessage())
     yield '[DONE]'

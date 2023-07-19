@@ -18,8 +18,9 @@ Notice: the models can be loadded on startup or on the fly.
 | Model | #Params | Checkpoint link |
 |:------|:--------|:---------------|
 |[Baichuan-13b-chat](https://github.com/baichuan-inc/Baichuan-13B) | 13B | [baichuan-inc/Baichuan-13B-Chat](https://huggingface.co/baichuan-inc/Baichuan-13B-Chat)|
-| [internlm-chat-7b](https://github.com/InternLM/InternLM)  |   7B    | [internlm/internlm-chat-7b](https://huggingface.co/internlm/internlm-chat-7b) |
 | [chatglm2-6b](https://github.com/THUDM/ChatGLM2-6B) |  6B  |                        [THUDM/chatglm2-6b](https://huggingface.co/THUDM/chatglm2-6b) |
+| [Llama-2-13b-chat](https://github.com/facebookresearch/llama) |  13B  |                        [meta-llama/Llama-2-13b-chat-hf](https://huggingface.co/meta-llama/Llama-2-13b-chat-hf) |
+| [internlm-chat-7b](https://github.com/InternLM/InternLM)  |   7B    | [internlm/internlm-chat-7b](https://huggingface.co/internlm/internlm-chat-7b) |
 | [chatglm-6b](https://github.com/THUDM/ChatGLM-6B) |  6B  | [THUDM/chatglm-6b](https://huggingface.co/THUDM/chatglm-6b) |
 
 ## Example Code

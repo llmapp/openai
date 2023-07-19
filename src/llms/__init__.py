@@ -7,6 +7,7 @@ from typing import Any, List
 from .baichuan import HANDLERS as BAICHUAN_HANDLERS
 from .chatglm import HANDLERS as CHATGLM_HANDLERS
 from .internlm import HANDLERS as INTERNLM_HANDLERS
+from .llama import HANDLERS as LLAMA_HANDLERS
 
 
 models = {
@@ -15,6 +16,7 @@ models = {
     "internlm-chat-7b": INTERNLM_HANDLERS,
     "internlm-chat-7b-8k": INTERNLM_HANDLERS,
     "Baichuan-13B-Chat": BAICHUAN_HANDLERS,
+    "Llama-2-13b-chat": LLAMA_HANDLERS,
 }
 
 load_dotenv()

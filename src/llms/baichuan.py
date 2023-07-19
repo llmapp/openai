@@ -28,7 +28,7 @@ def _chat(model, tokenizer, messages: List[ChatMessage]):
 def _stream_chat(model, tokenizer, messages: List[ChatMessage]):
     msgs = [__chat_message_to_baichuan_message(m) for m in messages]
     response = model.chat(tokenizer, msgs, stream=True)
-    return response
+    return response, "string"
 
 
 def __chat_message_to_baichuan_message(message: ChatMessage):
