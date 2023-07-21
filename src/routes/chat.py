@@ -57,6 +57,7 @@ def _predict(model_id: str, generate, stream_type: str):
     for response in generate:
         if stream_type == "delta":
             delta = response
+            delta = delta[:-4] if delta.endswith("</s>") else delta
         else:
             if stream_type == "tuple":
                 new_response, _ = response

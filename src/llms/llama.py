@@ -2,7 +2,7 @@ import os
 import torch
 from dotenv import load_dotenv
 from threading import Thread
-from transformers import AutoModelForCausalLM, LlamaTokenizer, StoppingCriteria, TextIteratorStreamer
+from transformers import AutoModelForCausalLM, AutoTokenizer, TextIteratorStreamer
 from transformers.generation.utils import GenerationConfig
 from typing import List
 
@@ -15,8 +15,8 @@ WEIGHTS_PATH = os.environ.get("LLAMA_WEIGHTS")
 
 def _load_model(model_name: str):
     path = os.path.join(WEIGHTS_PATH, model_name)
-    tokenizer = LlamaTokenizer.from_pretrained(path, trust_remote_code=True)
-    model = AutoModelForCausalLM.from_pretrained(path, device_map="cuda", trust_remote_code=True)
+    tokenizer = AutoTokenizer.from_pretrained(path, use_fast=False, trust_remote_code=True)
+    model = AutoModelForCausalLM.from_pretrained(path, device_map="cuda", trust_remote_code=True).eval()
     model.generation_config = GenerationConfig.from_pretrained(path)
     return model, tokenizer
 
@@ -28,7 +28,9 @@ def _chat(model, tokenizer, messages: List[ChatMessage]):
     response = model.generate(input_ids.cuda(),
                               do_sample=True,
                               max_length=2048,
-                              temperature=1.0)
+                              temperature=1.0,
+                              repetition_penalty=1.2,
+                              eos_token_id=tokenizer.eos_token_id)
     generated = tokenizer.decode(response[0])
     text = generated[len(ctx) + len('<s>'):].strip()
     text = text[:text.find('</s>')].strip()
@@ -36,7 +38,8 @@ def _chat(model, tokenizer, messages: List[ChatMessage]):
 
 
 def _stream_chat(model, tokenizer, messages: List[ChatMessage]):
-    gen_kwargs = {"do_sample": True, "max_length": 2048, "temperature": 1.0, "top_p": 0.95}
+    gen_kwargs = {"do_sample": True, "max_length": 2048, "temperature": 1.0,
+                  "repetition_penalty": 1.2, "top_p": 0.95, "eos_token_id": tokenizer.eos_token_id}
 
     ctx = _messages_to_ctx(messages)
     ctx += "\nassistant: "
