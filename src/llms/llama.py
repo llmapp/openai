@@ -34,7 +34,7 @@ def _chat(model, tokenizer, messages: List[ChatMessage]):
 
     response = model.generate(input_ids, **default_gen_kwargs, eos_token_id=tokenizer.eos_token_id)
     generated = tokenizer.decode(response[0], skip_prompt=True, skip_special_tokens=True)
-    generated = generated[generated.find("[/INST]") + 8:].strip()
+    generated = generated[len(chat):].strip()
     return generated, None
 
 
