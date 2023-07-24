@@ -10,3 +10,11 @@ def get_preload_llms():
         return []
 
     return [name.strip() for name in names.split(",")]
+
+
+def get_preload_diffusers():
+    names = os.environ.get("DIFFUSERS_PRELOAD")
+    if names is None or names.strip() == "":
+        return []
+
+    return [name.strip() for name in names.split(",")]

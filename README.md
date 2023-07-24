@@ -13,17 +13,44 @@ Start development server with the following command:
 
 Notice: the models can be loadded on startup or on the fly.
 
+## Supported Diffusion Modles
+
+| Model | #Resp Format| Checkpoint link |
+|:------|:--------|:---------------|
+| [stable-diffusion-xl-base-0.9](https://github.com/THUDM/ChatGLM2-6B) |  b64_json |                        [stabilityai/stable-diffusion-xl-base-0.9](https://huggingface.co/stabilityai/stable-diffusion-xl-base-0.9) |
 ## Supported Models
 
 | Model | #Params | Checkpoint link |
 |:------|:--------|:---------------|
-|[Baichuan-13b-chat](https://github.com/baichuan-inc/Baichuan-13B) | 13B | [baichuan-inc/Baichuan-13B-Chat](https://huggingface.co/baichuan-inc/Baichuan-13B-Chat)|
-| [chatglm2-6b](https://github.com/THUDM/ChatGLM2-6B) |  6B  |                        [THUDM/chatglm2-6b](https://huggingface.co/THUDM/chatglm2-6b) |
 | [Llama-2-13b-chat](https://github.com/facebookresearch/llama) |  13B  |                        [meta-llama/Llama-2-13b-chat-hf](https://huggingface.co/meta-llama/Llama-2-13b-chat-hf) |
+|[Baichuan-13B-Chat](https://github.com/baichuan-inc/Baichuan-13B) | 13B | [baichuan-inc/Baichuan-13B-Chat](https://huggingface.co/baichuan-inc/Baichuan-13B-Chat)|
 | [internlm-chat-7b](https://github.com/InternLM/InternLM)  |   7B    | [internlm/internlm-chat-7b](https://huggingface.co/internlm/internlm-chat-7b) |
+| [chatglm2-6b](https://github.com/THUDM/ChatGLM2-6B) |  6B  |                        [THUDM/chatglm2-6b](https://huggingface.co/THUDM/chatglm2-6b) |
 | [chatglm-6b](https://github.com/THUDM/ChatGLM-6B) |  6B  | [THUDM/chatglm-6b](https://huggingface.co/THUDM/chatglm-6b) |
 
 ## Example Code
+
+### Create Image
+``` python
+import os
+import openai
+from base64 import b64decode
+from IPython.display import Image
+
+openai.api_base = "http://localhost:8000/api/v1"
+openai.api_key = "none"
+
+response = openai.Image.create(
+  prompt="An astronaut riding a green horse",
+  n=1,
+  size="1024x1024",
+  response_format='b64_json'
+)
+
+b64_json = response['data'][0]['b64_json']
+image = b64decode(b64_json)
+Image(image)
+```
 
 ### List LLM Models
 ``` python

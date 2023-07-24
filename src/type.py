@@ -123,3 +123,21 @@ class EmbeddingsResponse(BaseModel):
     data: List[Dict[str, Any]]
     model: str
     usage: Optional[ChatCompletionResponseUsage] = None
+
+
+class CreateImageRequest(BaseModel):
+    prompt: str
+    n: Optional[int] = 1
+    size: Optional[Literal["256x256", "512x512", "1024x1024"]] = '1024x1024'
+    response_format: Optional[Literal["url", "b64_json"]] = "url"
+    user: Optional[str] = None
+
+
+class _CreateImageResponseDataItem(BaseModel):
+    url: Optional[str]
+    b64_json: Optional[str]
+
+
+class CreateImageResponse(BaseModel):
+    created: int = Field(default_factory=lambda: int(time.time()))
+    data: List[_CreateImageResponseDataItem]

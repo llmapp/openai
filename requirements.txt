@@ -8,3 +8,9 @@ uvicorn
 
 # for ChatGLM2-6B
 sentencepiece
+
+# for Stable Diffusion
+diffusers
+invisible_watermark
+accelerate
+safetensors
