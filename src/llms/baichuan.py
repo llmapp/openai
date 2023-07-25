@@ -4,13 +4,11 @@ from transformers.generation.utils import GenerationConfig
 from typing import List
 
 from ..type import ChatMessage
-
-
-MODEL_PREFIX = "baichuan-inc/"
+from ..utils.env import compose_model_id
 
 
 def _load_model(model_name: str):
-    model_id = model_name if model_name.startswith(MODEL_PREFIX) else MODEL_PREFIX + model_name
+    model_id = compose_model_id(model_name, "baichuan-inc")
     tokenizer = AutoTokenizer.from_pretrained(model_id, use_fast=False, trust_remote_code=True)
     model = AutoModelForCausalLM.from_pretrained(
         model_id, device_map="auto", torch_dtype=torch.float16, trust_remote_code=True)

@@ -2,14 +2,13 @@ from diffusers import DiffusionPipeline
 import torch
 
 from ..utils.logger import get_logger
-
-MODEL_PREFIX = "stabilityai/"
+from ..utils.env import compose_model_id
 
 logger = get_logger(__name__)
 
 
 def _load_model(model_name: str):
-    model_id = model_name if model_name.startswith(MODEL_PREFIX) else MODEL_PREFIX + model_name
+    model_id = compose_model_id(model_name, "stabilityai")
 
     logger.info(f"Loading model {model_id} ...")
     pipe = DiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float16,

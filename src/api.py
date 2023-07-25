@@ -40,8 +40,8 @@ async def startup_event():
 
 prefix = os.environ.get('API_PREFIX', "/api/v1")
 api.include_router(chat_router, prefix=prefix, tags=["Chat"])
-api.include_router(image_router, prefix=prefix, tags=["Image"])
 api.include_router(models_router, prefix=prefix, tags=["Models"])
+api.include_router(image_router, prefix=prefix, tags=["Image"])
 
 
 @api.on_event("shutdown")

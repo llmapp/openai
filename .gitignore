@@ -1,3 +1,7 @@
+# Ignore models except the .gitkeep file
+models/*
+!models/.gitkeep
+
 # Ignore Python byte-code files
 *.pyc
 __pycache__/

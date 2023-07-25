@@ -3,7 +3,7 @@ from typing import List
 from ..type import ChatMessage
 
 
-def seprate_messages(messages: List[ChatMessage]):
+def split_messages(messages: List[ChatMessage]):
     query = messages[-1].content
 
     prev_messages = messages[:-1]
