@@ -19,7 +19,6 @@ def _load_model(model_name: str, organization: str = None, extra_args: dict = No
     if extra_args is not None:
         model_args.update(extra_args)
 
-    print("-------> model_id is", model_id)
     model = AutoModelForCausalLM.from_pretrained(model_id, **model_args).eval()
 
     tokenizer = AutoTokenizer.from_pretrained(model_id, use_fast=False)
