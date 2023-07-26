@@ -16,6 +16,7 @@ models = {
     "internlm-chat-7b": INTERNLM_HANDLERS,
     "internlm-chat-7b-8k": INTERNLM_HANDLERS,
     "Baichuan-13B-Chat": BAICHUAN_HANDLERS,
+    "Llama-2-7b-chat-hf": LLAMA_HANDLERS,
     "Llama-2-13b-chat-hf": LLAMA_HANDLERS,
 }
 
