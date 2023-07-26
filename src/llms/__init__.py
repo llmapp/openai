@@ -8,6 +8,7 @@ from .baichuan import HANDLERS as BAICHUAN_HANDLERS
 from .chatglm import HANDLERS as CHATGLM_HANDLERS
 from .internlm import HANDLERS as INTERNLM_HANDLERS
 from .llama import HANDLERS as LLAMA_HANDLERS
+from .freewilly import HANDLERS as FREE_WILLY_HANDLERS
 
 
 models = {
@@ -18,6 +19,7 @@ models = {
     "Baichuan-13B-Chat": BAICHUAN_HANDLERS,
     "Llama-2-7b-chat-hf": LLAMA_HANDLERS,
     "Llama-2-13b-chat-hf": LLAMA_HANDLERS,
+    "FreeWilly2": FREE_WILLY_HANDLERS,
 }
 
 load_dotenv()

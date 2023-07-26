@@ -28,7 +28,12 @@ def chat(model_id: str, messages: List[ChatMessage]):
 
     model, tokenizer = get_model(model_id)
 
-    response, _ = handlers.get("chat")(model, tokenizer, messages)
+    chat = handlers.get("chat")
+    if chat is not None:
+        response, _ = chat(model, tokenizer, messages)
+    else:
+        # TODO: if chat is not available, use stream_chat
+        raise NotImplementedError()
 
     choice_data = ChatCompletionResponseChoice(
         index=0,

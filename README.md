@@ -22,6 +22,7 @@ Notice: the models can be loadded on startup or on the fly.
 
 | Model | #Params | Checkpoint link |
 |:------|:--------|:---------------|
+| [FreeWilly2](https://stability.ai/blog/freewilly-large-instruction-fine-tuned-models) |  70B  |                        [stabilityai/FreeWilly2](https://huggingface.co/stabilityai/FreeWilly2) |
 | [Llama-2-13b-chat-hf](https://github.com/facebookresearch/llama) |  13B  |                        [meta-llama/Llama-2-13b-chat-hf](https://huggingface.co/meta-llama/Llama-2-13b-chat-hf) |
 | [Llama-2-7b-chat-hf](https://github.com/facebookresearch/llama) |  7B  |                        [meta-llama/Llama-2-7b-chat-hf](https://huggingface.co/meta-llama/Llama-2-7b-chat-hf) |
 |[Baichuan-13B-Chat](https://github.com/baichuan-inc/Baichuan-13B) | 13B | [baichuan-inc/Baichuan-13B-Chat](https://huggingface.co/baichuan-inc/Baichuan-13B-Chat)|
