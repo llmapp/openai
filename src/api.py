@@ -1,3 +1,4 @@
+import gc
 import os
 import torch
 
@@ -25,9 +26,15 @@ logger = get_logger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):  # collects GPU memory
     yield
+
+    gc.collect()
+
     if torch.cuda.is_available():
         torch.cuda.empty_cache()
         torch.cuda.ipc_collect()
+
+    if torch.backends.mps.is_available():
+        torch.mps.empty_cache()
 
 api = FastAPI(lifespan=lifespan)
 
