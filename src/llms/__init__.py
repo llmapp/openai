@@ -4,12 +4,15 @@ from dotenv import load_dotenv
 from pydantic import BaseModel
 from typing import Any, List
 
+from ..utils.logger import get_logger
+
 from .baichuan import HANDLERS as BAICHUAN_HANDLERS
 from .chatglm import HANDLERS as CHATGLM_HANDLERS
 from .internlm import HANDLERS as INTERNLM_HANDLERS
 from .llama import HANDLERS as LLAMA_HANDLERS
 from .freewilly import HANDLERS as FREE_WILLY_HANDLERS
 
+logger = get_logger(__name__)
 
 models = {
     "chatglm-6b": CHATGLM_HANDLERS,
@@ -53,7 +56,10 @@ def get_model(model_id: str):
 
     if llm is None:
         handlers = models.get(model_id)
+
+        logger.info(f"Loading model {model_id} ...")
         model, tokenizer = handlers.get("load")(model_id)
+        logger.info(f"Model {model_id} loaded!")
 
         llm = LLM(id=model_id, tokenizer=tokenizer, model=model)
         llms.append(llm)

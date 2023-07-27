@@ -1,12 +1,14 @@
-from diffusers import DiffusionPipeline
-from dotenv import load_dotenv
 from pydantic import BaseModel
 from typing import Any, List
 
 from .stable_diffusion import HANDLERS as STABLE_DIFFUSION_HANDLERS
+from ..utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 handler_map = {
     "stable-diffusion-xl-base-0.9": STABLE_DIFFUSION_HANDLERS,
+    "stable-diffusion-xl-base-1.0": STABLE_DIFFUSION_HANDLERS,
 }
 
 
@@ -28,7 +30,9 @@ def get_model(model_id: str = "stable-diffusion-xl-base-0.9"):
 
     if model is None:
         handlers = handler_map.get(model_id)
+        logger.info(f"Loading model {model_id} ...")
         pipe = handlers.get("load")(model_id)
+        logger.info(f"Model {model_id} loaded!")
         model = DiffuseModel(id=model_id, pipe=pipe)
         models.append(model)
 
