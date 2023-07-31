@@ -6,7 +6,7 @@ from ..utils.logger import get_logger
 
 logger = get_logger(__name__)
 
-handler_map = {
+models = {
     "stable-diffusion-xl-base-0.9": STABLE_DIFFUSION_HANDLERS,
     "stable-diffusion-xl-base-1.0": STABLE_DIFFUSION_HANDLERS,
 }
@@ -17,23 +17,23 @@ class DiffuseModel(BaseModel):
     pipe: Any
 
 
-models: List[DiffuseModel] = []
+_models: List[DiffuseModel] = []
 
 
-def get_model(model_id: str = "stable-diffusion-xl-base-0.9"):
-    global models
+def get_model(model_id: str = "stable-diffusion-xl-base-1.0"):
+    global _models
 
-    if handler_map.get(model_id) is None:
+    if models.get(model_id) is None:
         raise ValueError(f"Model {model_id} not found")
 
-    model = next((m for m in models if m.id == model_id), None)
+    model = next((m for m in _models if m.id == model_id), None)
 
     if model is None:
-        handlers = handler_map.get(model_id)
+        handlers = models.get(model_id)
         logger.info(f"Loading model {model_id} ...")
         pipe = handlers.get("load")(model_id)
         logger.info(f"Model {model_id} loaded!")
         model = DiffuseModel(id=model_id, pipe=pipe)
-        models.append(model)
+        _models.append(model)
 
     return model

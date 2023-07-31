@@ -13,6 +13,15 @@ Start development server with the following command:
 
 Notice: the models can be loadded on startup or on the fly.
 
+## Supported Audio Models
+| Model | #Params | Checkpoint link |
+|:------|:--------|:---------------|
+| [whisper-large-v2](https://github.com/openai/whisper) | 1550 M | [openai/whisper-large-v2](https://huggingface.co/openai/whisper-large-v2) |
+| [whisper-medium](https://github.com/openai/whisper) | 769 M |  [openai/whisper-medium](https://huggingface.co/openai/whisper-medium) |
+| [whisper-small](https://github.com/openai/whisper) | 244 M |  [openai/whisper-small](https://huggingface.co/openai/whisper-small) |
+| [whisper-base](https://github.com/openai/whisper) | 74 M | [openai/whisper-base](https://huggingface.co/openai/whisper-base) |
+| [whisper-tiny](https://github.com/openai/whisper) | 39 M | [openai/whisper-tiny](https://huggingface.co/openai/whisper-tiny) |
+
 ## Supported Diffusion Modles
 
 | Model | #Resp Format| Checkpoint link |

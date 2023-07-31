@@ -2,6 +2,7 @@
 
 import time
 
+from fastapi import File
 from pydantic import BaseModel, Field
 from typing import Any, Dict, List, Literal, Optional, Union
 
@@ -141,3 +142,16 @@ class _CreateImageResponseDataItem(BaseModel):
 class CreateImageResponse(BaseModel):
     created: int = Field(default_factory=lambda: int(time.time()))
     data: List[_CreateImageResponseDataItem]
+
+
+# class AudioRequest(BaseModel):
+#     file: bytes
+#     model: str
+#     prompt: Optional[str] = None
+#     response_format: Optional[Literal["json", "text", "srt", "verbose_json", "vtt"]] = "json"
+#     temperature: Optional[float] = 1.0
+#     language: Optional[str]
+
+
+class AudioResponse(BaseModel):
+    text: str

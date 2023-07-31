@@ -9,12 +9,14 @@ from fastapi.responses import JSONResponse
 
 from .llms import get_model as get_llm_model
 from .diffusers import get_model as get_diffuser_model
+from .audios import get_model as get_audio_model
 
+from .routes.audio import audio_router
 from .routes.chat import chat_router
 from .routes.image import image_router
 from .routes.models import models_router
 
-from .utils.env import get_preload_llms, get_preload_diffusers
+from .utils.env import get_preload_models
 from .utils.logger import get_logger
 from .utils.cors import add_cors_middleware
 
@@ -46,6 +48,7 @@ async def startup_event():
     print("Starting up...")
 
 prefix = os.environ.get('API_PREFIX', "/api/v1")
+api.include_router(audio_router, prefix=prefix, tags=["Audio"])
 api.include_router(chat_router, prefix=prefix, tags=["Chat"])
 api.include_router(models_router, prefix=prefix, tags=["Models"])
 api.include_router(image_router, prefix=prefix, tags=["Image"])
@@ -62,15 +65,20 @@ async def http_exception_handler(_, exception):
 
 
 if __name__ == '__main__':
-    preload_llms = get_preload_llms()
+    preload_llms = get_preload_models("LLMS_PRELOAD")
     print("preloading models:", preload_llms)
     for name in preload_llms:
         get_llm_model(name)
 
-    preload_diffusers = get_preload_diffusers()
+    preload_diffusers = get_preload_models("DIFFUSERS_PRELOAD")
     print("preloading diffusers models:", preload_diffusers)
     for name in preload_diffusers:
         get_diffuser_model(name)
+
+    preload_audios = get_preload_models("AUDIOS_PRELOAD")
+    print("preloading audio models:", preload_audios)
+    for name in preload_audios:
+        get_audio_model(name)
 
     import uvicorn
     uvicorn.run("src.api:api",

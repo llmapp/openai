@@ -43,16 +43,16 @@ def get_models():
     return list(models.keys())
 
 
-llms: List[LLM] = []
+_llms: List[LLM] = []
 
 
 def get_model(model_id: str):
-    global llms
+    global _llms
 
     if models.get(model_id) is None:
         raise ValueError(f"Model {model_id} not found")
 
-    llm = next((l for l in llms if l.id == model_id), None)
+    llm = next((l for l in _llms if l.id == model_id), None)
 
     if llm is None:
         handlers = models.get(model_id)
@@ -62,6 +62,6 @@ def get_model(model_id: str):
         logger.info(f"Model {model_id} loaded!")
 
         llm = LLM(id=model_id, tokenizer=tokenizer, model=model)
-        llms.append(llm)
+        _llms.append(llm)
 
     return llm.model, llm.tokenizer

@@ -6,12 +6,12 @@ torch>=2.0
 transformers==4.31.0
 transformers_stream_generator==0.0.4
 uvicorn
-
-# for ChatGLM2-6B
 sentencepiece
+accelerate>=0.20.3
 
 # for Stable Diffusion
 diffusers
 invisible_watermark
-accelerate
 safetensors
+
+python-multipart
