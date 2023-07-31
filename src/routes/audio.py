@@ -14,21 +14,29 @@ logger = get_logger(__name__)
 @audio_router.post("/transcriptions", response_model=AudioResponse)
 async def create_transcription(file: bytes = File(...), model: str = Form(...),
                                prompt: Optional[str] = Form(None), response_format: Optional[str] = Form("json"),
-                               temperature: Optional[float] = Form(1.0), language: Optional[str] = Form("en")):
-    logger.info(f"Request: {model}")
-
+                               temperature: Optional[float] = Form(1.0), language: Optional[str] = Form("zh")):
     audio_model = get_model(model)
     transcribe = models.get(model).get("transcribe")
 
-#     logger.info(f"Prompt: {prompt}")
+    kwargs = {"prompt": prompt, "temperature": temperature, "language": language}
+    text = transcribe(file, audio_model, **kwargs)
 
-    text = transcribe(file, audio_model.model, audio_model.processor, prompt)
-    # text = "Hello world!"
-    response = AudioResponse(text=text)
-    return response
+    if response_format == "json":
+        return AudioResponse(text=text)
+    else:
+        raise NotImplementedError()
 
 
 @audio_router.post("/translations", response_model=AudioResponse)
 async def create_translation(file: bytes = File(...), model: str = Form(...), prompt: Optional[str] = Form(None),
                              response_format: Optional[str] = Form("json"), temperature: Optional[float] = Form(1.0)):
-    pass
+    audio_model = get_model(model)
+    translate = models.get(model).get("translate")
+
+    kwargs = {"prompt": prompt, "temperature": temperature, "language": "en"}
+    text = translate(file, audio_model, **kwargs)
+
+    if response_format == "json":
+        return AudioResponse(text=text)
+    else:
+        raise NotImplementedError()

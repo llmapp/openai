@@ -19,6 +19,7 @@ class AudioModel(BaseModel):
     id: str
     model: Any
     processor: Any
+    pipe: Any
 
 
 _models: List[AudioModel] = []
@@ -35,10 +36,10 @@ def get_model(model_id: str = "whisper-large-v2"):
     if _model is None:
         handlers = models.get(model_id)
         logger.info(f"Loading model {model_id} ...")
-        model, processor = handlers.get("load")(model_id)
+        model, processor, pipe = handlers.get("load")(model_id)
         logger.info(f"Model {model_id} loaded!")
 
-        _model = AudioModel(id=model_id, model=model, processor=processor)
+        _model = AudioModel(id=model_id, model=model, processor=processor, pipe=pipe)
         _models.append(_model)
 
     return _model
