@@ -1,6 +1,7 @@
 fastapi
 python-dotenv
 python-jose
+python-multipart
 sse-starlette
 torch>=2.0
 transformers==4.31.0
@@ -13,5 +14,3 @@ accelerate>=0.20.3
 diffusers
 invisible_watermark
 safetensors
-
-python-multipart

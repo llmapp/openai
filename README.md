@@ -16,6 +16,7 @@ Notice: the models can be loadded on startup or on the fly.
 ## Supported Audio Models
 | Model | #Params | Checkpoint link |
 |:------|:--------|:---------------|
+| [whisper-1](https://github.com/openai/whisper) | 1550 | alias for [whisper-large-v2](https://huggingface.co/openai/whisper-large-v2) |
 | [whisper-large-v2](https://github.com/openai/whisper) | 1550 M | [openai/whisper-large-v2](https://huggingface.co/openai/whisper-large-v2) |
 | [whisper-medium](https://github.com/openai/whisper) | 769 M |  [openai/whisper-medium](https://huggingface.co/openai/whisper-medium) |
 | [whisper-small](https://github.com/openai/whisper) | 244 M |  [openai/whisper-small](https://huggingface.co/openai/whisper-small) |
@@ -41,6 +42,18 @@ Notice: the models can be loadded on startup or on the fly.
 | [internlm-chat-7b](https://github.com/InternLM/InternLM)  |   7B    | [internlm/internlm-chat-7b](https://huggingface.co/internlm/internlm-chat-7b) |
 
 ## Example Code
+
+### Create Transcription
+```python
+import openai
+
+openai.api_base = "http://localhost:8000/api/v1"
+openai.api_key = "None"
+
+audio_file = open("audio.wav", "rb")
+transcript = openai.Audio.transcribe("whisper-1", audio_file)
+print(transcript.text)
+```
 
 ### Create Image
 ``` python
@@ -94,7 +107,7 @@ print(resp.choices[0].message.content)
 ``` python
 import openai
 
-openai.api_base = "http://localhost:8000/v1"
+openai.api_base = "http://localhost:8000/api/v1"
 openai.api_key = "none"
 
 for chunk in openai.ChatCompletion.create(
