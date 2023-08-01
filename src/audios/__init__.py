@@ -28,6 +28,9 @@ _models: List[AudioModel] = []
 def get_model(model_id: str = "whisper-large-v2"):
     global _models
 
+    if model_id == "whisper-1":
+        model_id = "whisper-large-v2"
+
     if models.get(model_id) is None:
         raise ValueError(f"Model {model_id} not found")
 

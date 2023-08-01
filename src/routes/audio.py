@@ -1,4 +1,4 @@
-from fastapi import APIRouter, File, Form
+from fastapi import APIRouter, Form, UploadFile
 from typing import Optional
 
 from ..audios import models, get_model
@@ -12,7 +12,7 @@ logger = get_logger(__name__)
 
 
 @audio_router.post("/transcriptions", response_model=AudioResponse)
-async def create_transcription(file: bytes = File(...), model: str = Form(...),
+async def create_transcription(file: UploadFile, model: str = Form(...),
                                prompt: Optional[str] = Form(None), response_format: Optional[str] = Form("json"),
                                temperature: Optional[float] = Form(1.0), language: Optional[str] = Form("zh")):
     audio_model = get_model(model)
@@ -28,7 +28,7 @@ async def create_transcription(file: bytes = File(...), model: str = Form(...),
 
 
 @audio_router.post("/translations", response_model=AudioResponse)
-async def create_translation(file: bytes = File(...), model: str = Form(...), prompt: Optional[str] = Form(None),
+async def create_translation(file: UploadFile, model: str = Form(...), prompt: Optional[str] = Form(None),
                              response_format: Optional[str] = Form("json"), temperature: Optional[float] = Form(1.0)):
     audio_model = get_model(model)
     translate = models.get(model).get("translate")
