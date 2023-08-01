@@ -13,6 +13,8 @@ from .audios import get_model as get_audio_model
 
 from .routes.audio import audio_router
 from .routes.chat import chat_router
+from .routes.file import file_router
+from .routes.finetune import fine_tune_router
 from .routes.image import image_router
 from .routes.models import models_router
 
@@ -50,7 +52,9 @@ async def startup_event():
 prefix = os.environ.get('API_PREFIX', "/api/v1")
 api.include_router(audio_router, prefix=prefix, tags=["Audio"])
 api.include_router(chat_router, prefix=prefix, tags=["Chat"])
-api.include_router(models_router, prefix=prefix, tags=["Models"])
+api.include_router(file_router, prefix=prefix, tags=["File"])
+api.include_router(fine_tune_router, prefix=prefix, tags=["FineTune"])
+api.include_router(models_router, prefix=prefix, tags=["Model"])
 api.include_router(image_router, prefix=prefix, tags=["Image"])
 
 

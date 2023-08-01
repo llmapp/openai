@@ -144,14 +144,50 @@ class CreateImageResponse(BaseModel):
     data: List[_CreateImageResponseDataItem]
 
 
-# class AudioRequest(BaseModel):
-#     file: bytes
-#     model: str
-#     prompt: Optional[str] = None
-#     response_format: Optional[Literal["json", "text", "srt", "verbose_json", "vtt"]] = "json"
-#     temperature: Optional[float] = 1.0
-#     language: Optional[str]
-
-
 class AudioResponse(BaseModel):
     text: str
+
+
+class UploadFileResponse(BaseModel):
+    id: str
+    object: str = "file"
+    bytes: int
+    created_at: int = Field(default_factory=lambda: int(time.time()))
+    filename: str
+    purpose: Literal['fine-tune', 'search'] | str
+
+
+class ListFilesResponse(BaseModel):
+    data: List[UploadFileResponse]
+    object: str = "list"
+
+
+class DeleteFileResponse(BaseModel):
+    id: str
+    object: str = "file"
+    deleted: bool
+
+
+class CreateFineTuneRequest(BaseModel):
+    training_file: str
+    validation_file: Optional[str]
+    model: Literal["ada", "babbage", "curie", "davinci"] | str = "curie"
+    n_epochs: Optional[int] = 4
+    batch_size: Optional[int] = None
+    learning_rate_multiplier: Optional[float] = None
+    prompt_loss_weight: Optional[float] = 0.01
+    compute_classification_metrics: Optional[bool] = False
+    classification_n_classes: Optional[int] = None
+    classification_positive_class: Optional[str] = None
+    classification_betas: Optional[List[float]] = None
+    suffix: Optional[str] = None
+
+
+class CreateFineTuneResponse(BaseModel):
+    id: str
+    object: str = "fine-tune"
+    model: str
+    created_at: int = Field(default_factory=lambda: int(time.time()))
+    updated_at: int = Field(default_factory=lambda: int(time.time()))
+    status: Literal["pending", "running", "completed", "failed"]
+    # TODO: more ...
