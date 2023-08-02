@@ -32,7 +32,7 @@ def _convert_audio(file):
         with open(path, "wb") as f:
             f.write(file.read())
         waveform = whisper.load_audio(path)
-        waveform = whisper.pad_or_trim(waveform)
+        # waveform = whisper.pad_or_trim(waveform)
         os.remove(path)
 
     return waveform
