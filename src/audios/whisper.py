@@ -1,43 +1,41 @@
-import soundfile
-import torch
-from transformers import pipeline, WhisperProcessor, WhisperForConditionalGeneration
+import os
+import tempfile
+import whisper
+from uuid import uuid4
 
 from ..utils.env import compose_model_id
 
+_ORGANIAZTION = "openai"
+
 
 def _load_model(model_name: str):
-    model_id = compose_model_id(model_name, "openai")
-
-    # FIXME: the model are loaded twice
-
-    pipe = pipeline(
-        "automatic-speech-recognition",
-        model=model_id,
-        chunk_length_s=30,
-        device="cuda:0" if torch.cuda.is_available() else "cpu",
-    )
-
-    processor = WhisperProcessor.from_pretrained(model_id)
-    model = WhisperForConditionalGeneration.from_pretrained(model_id)
-    model.config.forced_decoder_ids = None
-
-    return model, processor, pipe
+    model_name = model_name[len("whisper-"):]
+    model_id = compose_model_id(model_name, prefix=_ORGANIAZTION, suffix=".pt", remove_prefix=True)
+    download_root = os.path.join(os.environ.get("MODEL_HUB_PATH", "models"), _ORGANIAZTION)
+    model = whisper.load_model(model_id, download_root=download_root)
+    return model
 
 
-def _transcribe(audio, model, **kwargs):
-    speech, _ = soundfile.read(audio.file)
-    input_features = model.processor(speech, return_tensors="pt", sampling_rate=16000).input_features
-    outputs = model.model.generate(input_features, **kwargs)
-    transcription = model.processor.batch_decode(outputs, skip_special_tokens=True)
-
-    return "".join(transcription)
+def _transcribe(file, audio_model, kwargs):
+    audio = _convert_audio(file)
+    return audio_model.model.transcribe(audio, task="transcribe", **kwargs)
 
 
-def _translate(audio, model, **kwargs):
-    speech, _ = soundfile.read(audio.file)
-    translation = model.pipe(speech.copy(), batch_size=8, generate_kwargs={"task": "translate", **kwargs})["text"]
+def _translate(file, audio_model, kwargs):
+    audio = _convert_audio(file)
+    return audio_model.model.transcribe(audio, task="translation", **kwargs)
 
-    return "".join(translation)
+
+def _convert_audio(file):
+    with tempfile.TemporaryDirectory() as tmpdir:
+        path = f"{tmpdir}/{uuid4()}.audio"
+        with open(path, "wb") as f:
+            f.write(file.read())
+        waveform = whisper.load_audio(path)
+        waveform = whisper.pad_or_trim(waveform)
+        os.remove(path)
+
+    return waveform
 
 
 HANDLERS = {

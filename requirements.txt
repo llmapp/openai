@@ -14,3 +14,6 @@ accelerate>=0.20.3
 diffusers
 invisible_watermark
 safetensors
+
+# for whisper models
+openai-whisper

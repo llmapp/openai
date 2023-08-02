@@ -34,8 +34,8 @@ Notice: the models can be loadded on startup or on the fly.
 | Embeddings        |                          |                  |                         |
 |                   | Create embeddings        |                  |                         |
 | Audio             |                          |                  |                         |
-|                   | Create transcription     | Partial Done     |                         |
-|                   | Create translation       | Partial Done     |                         |
+|                   | Create transcription     | Done             |                         |
+|                   | Create translation       | Done             |                         |
 | Files             |                          |                  |                         |
 |                   | List files               | Done             |                         |
 |                   | Upload file              | Done             |                         |
@@ -71,16 +71,17 @@ Notice: the models can be loadded on startup or on the fly.
 | [stable-diffusion-xl-base-1.0](https://github.com/Stability-AI/generative-models) | b64_json     | [stabilityai/stable-diffusion-xl-base-1.0](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) |
 | [stable-diffusion-xl-base-0.9](https://github.com/Stability-AI/generative-models) | b64_json     | [stabilityai/stable-diffusion-xl-base-0.9](https://huggingface.co/stabilityai/stable-diffusion-xl-base-0.9) |
 
-## Supported Audio Models
 
-| Model                                                 | #Params | Checkpoint link                                                              |
-| :---------------------------------------------------- | :------ | :--------------------------------------------------------------------------- |
-| [whisper-1](https://github.com/openai/whisper)        | 1550 M  | alias for [whisper-large-v2](https://huggingface.co/openai/whisper-large-v2) |
-| [whisper-large-v2](https://github.com/openai/whisper) | 1550 M  | [openai/whisper-large-v2](https://huggingface.co/openai/whisper-large-v2)    |
-| [whisper-medium](https://github.com/openai/whisper)   | 769 M   | [openai/whisper-medium](https://huggingface.co/openai/whisper-medium)        |
-| [whisper-small](https://github.com/openai/whisper)    | 244 M   | [openai/whisper-small](https://huggingface.co/openai/whisper-small)          |
-| [whisper-base](https://github.com/openai/whisper)     | 74 M    | [openai/whisper-base](https://huggingface.co/openai/whisper-base)            |
-| [whisper-tiny](https://github.com/openai/whisper)     | 39 M    | [openai/whisper-tiny](https://huggingface.co/openai/whisper-tiny)            |
+## Supported Audio Models
+| Model | #Params | Checkpoint link |
+|:------|:--------|:---------------|
+| [whisper-1](https://github.com/openai/whisper) | 1550 | alias for [whisper-large-v2](https://openaipublic.azureedge.net/main/whisper/models/81f7c96c852ee8fc832187b0132e569d6c3065a3252ed18e56effd0b6a73e524/large-v2.pt) |
+| [whisper-large-v2](https://github.com/openai/whisper) | 1550 M | [large-v2](https://openaipublic.azureedge.net/main/whisper/models/81f7c96c852ee8fc832187b0132e569d6c3065a3252ed18e56effd0b6a73e524/large-v2.pt) |
+| [whisper-medium](https://github.com/openai/whisper) | 769 M |  [medium](https://openaipublic.azureedge.net/main/whisper/models/345ae4da62f9b3d59415adc60127b97c714f32e89e936602e85993674d08dcb1/medium.pt) |
+| [whisper-small](https://github.com/openai/whisper) | 244 M |  [small](https://openaipublic.azureedge.net/main/whisper/models/9ecf779972d90ba49c06d968637d720dd632c55bbf19d441fb42bf17a411e794/small.pt) |
+| [whisper-base](https://github.com/openai/whisper) | 74 M | [base](https://openaipublic.azureedge.net/main/whisper/models/ed3a0b6b1c0edf879ad9b11b1af5a0e6ab5db9205f891f668f8b0e6c6326e34e/base.pt) |
+| [whisper-tiny](https://github.com/openai/whisper) | 39 M | [tiny](https://openaipublic.azureedge.net/main/whisper/models/65147644a518d12f04e32d6f3b26facc3f8dd46e5390956a9424a650c0ce22b9/tiny.pt) |
+       |
 
 ## Example Code
 
