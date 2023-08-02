@@ -155,12 +155,34 @@ Image(image)
 ### Create Transcription
 
 ```python
+# Cell 1: set openai
 import openai
 
 openai.api_base = "http://localhost:8000/api/v1"
 openai.api_key = "None"
 
-audio_file = open("audio.wav", "rb")
+# Cell 2: create a recorder in notebook
+# ===================================================
+# sudo apt install ffmpeg
+# pip install torchaudio ipywebrtc notebook
+# jupyter nbextension enable --py widgetsnbextension
+
+from IPython.display import Audio
+from ipywebrtc import AudioRecorder, CameraStream
+
+camera = CameraStream(constraints={'audio': True,'video':False})
+recorder = AudioRecorder(stream=camera)
+recorder
+
+# Cell 3: transcribe
+import os
+import openai
+
+temp_file = '/tmp/recording.webm'
+with open(temp_file, 'wb') as f:
+    f.write(recorder.audio.value)
+audio_file = open(temp_file, "rb")
+
 transcript = openai.Audio.transcribe("whisper-1", audio_file)
 print(transcript.text)
 ```

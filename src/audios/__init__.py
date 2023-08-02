@@ -7,11 +7,16 @@ from ..utils.logger import get_logger
 logger = get_logger(__name__)
 
 models = {
+    "whisper-large-v1": WHISPER_HANDLERS,
     "whisper-large-v2": WHISPER_HANDLERS,
     "whisper-medium": WHISPER_HANDLERS,
+    "whisper-medium.en": WHISPER_HANDLERS,
     "whisper-small": WHISPER_HANDLERS,
+    "whisper-small.en": WHISPER_HANDLERS,
     "whisper-base": WHISPER_HANDLERS,
+    "whisper-base.en": WHISPER_HANDLERS,
     "whisper-tiny": WHISPER_HANDLERS,
+    "whisper-tiny.en": WHISPER_HANDLERS,
 }
 
 
