@@ -2,7 +2,9 @@ fastapi
 python-dotenv
 python-jose
 python-multipart
+sentence-transformers
 sse-starlette
+tiktoken
 torch>=2.0
 transformers==4.31.0
 transformers_stream_generator==0.0.4
@@ -17,3 +19,8 @@ safetensors
 
 # for whisper models
 openai-whisper
+
+# # for funsar
+# modelscope
+# funasr
+# torchaudio

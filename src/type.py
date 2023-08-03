@@ -88,7 +88,7 @@ class ChatCompletionResponseStreamChoice(BaseModel):
     finish_reason: Optional[Literal["stop", "length"]] = None
 
 
-class ChatCompletionResponseUsage(BaseModel):
+class UsageInfo(BaseModel):
     prompt_tokens: int = 0
     total_tokens: int = 0
     completion_tokens: Optional[int] = 0
@@ -101,7 +101,7 @@ class ChatCompletionResponse(BaseModel):
     object: Literal["chat.completion", "chat.completion.chunk"]
     created: Optional[int] = Field(default_factory=lambda: int(time.time()))
     choices: List[Union[ChatCompletionResponseChoice, ChatCompletionResponseStreamChoice]]
-    usage: Optional[ChatCompletionResponseUsage] = None
+    usage: Optional[UsageInfo] = None
 
 
 class ChatCompletionStreamResponse(BaseModel):
@@ -123,7 +123,7 @@ class EmbeddingsResponse(BaseModel):
     object: str = "list"
     data: List[Dict[str, Any]]
     model: str
-    usage: Optional[ChatCompletionResponseUsage] = None
+    usage: Optional[UsageInfo] = None
 
 
 class CreateImageRequest(BaseModel):
@@ -154,7 +154,7 @@ class UploadFileResponse(BaseModel):
     bytes: int
     created_at: int = Field(default_factory=lambda: int(time.time()))
     filename: str
-    purpose: Literal['fine-tune', 'search'] | str
+    purpose: Literal['fine-tune', 'search']  # | str
 
 
 class ListFilesResponse(BaseModel):
@@ -171,7 +171,7 @@ class DeleteFileResponse(BaseModel):
 class CreateFineTuneRequest(BaseModel):
     training_file: str
     validation_file: Optional[str]
-    model: Literal["ada", "babbage", "curie", "davinci"] | str = "curie"
+    model: Literal["ada", "babbage", "curie", "davinci"] = "curie"  # | str = "curie"
     n_epochs: Optional[int] = 4
     batch_size: Optional[int] = None
     learning_rate_multiplier: Optional[float] = None

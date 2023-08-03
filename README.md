@@ -1,4 +1,4 @@
-# LLM as OpenAI
+# OpenAI.mini
 
 This repo implements OpenAI style APIs for large language models. With this repo, you can chat with LLMs using the [`openai` libraries](https://platform.openai.com/docs/api-reference)
 
@@ -31,8 +31,8 @@ Notice: the models can be loadded on startup or on the fly.
 |                   | Create image             | Partial Done     |                         |
 |                   | Create image edit        |                  |                         |
 |                   | Create image variation   |                  |                         |
-| Embeddings        |                          |                  |                         |
-|                   | Create embeddings        |                  |                         |
+| Embeddings        |                          |                  | Support Multi. LLMs     |
+|                   | Create embeddings        | Done             |                         |
 | Audio             |                          |                  |                         |
 |                   | Create transcription     | Done             |                         |
 |                   | Create translation       | Done             |                         |
@@ -63,6 +63,13 @@ Notice: the models can be loadded on startup or on the fly.
 | [chatglm2-6b](https://github.com/THUDM/ChatGLM2-6B)                                   | 6B      | [THUDM/chatglm2-6b](https://huggingface.co/THUDM/chatglm2-6b)                           |
 | [chatglm-6b](https://github.com/THUDM/ChatGLM-6B)                                     | 6B      | [THUDM/chatglm-6b](https://huggingface.co/THUDM/chatglm-6b)                             |
 | [internlm-chat-7b](https://github.com/InternLM/InternLM)                              | 7B      | [internlm/internlm-chat-7b](https://huggingface.co/internlm/internlm-chat-7b)           |
+
+## Supported Embedding Models
+
+| Model                                                                                 | Embedding Dim.| Sequnce Length | Checkpoint link                                                                         |
+| :------------------------------------------------------------------------------------ | :------ | :----- | :-------------------------------------------------------------------------------------- |
+| [gte-large](https://huggingface.co/thenlper/gte-large) | 1024     | 512 | [thenlper/gte-large](https://huggingface.co/thenlper/gte-large)                 |
+| [e5-large-v2](https://huggingface.co/intfloat/e5-large-v2) | 1024     | 512 | [intfloat/e5-large-v2](https://huggingface.co/intfloat/e5-large-v2)                 |
 
 ## Supported Diffusion Modles
 
@@ -102,7 +109,7 @@ for chunk in openai.ChatCompletion.create(
         print(chunk.choices[0].delta.content, end="", flush=True)
 ```
 
-### Normal Chat
+### Chat
 
 ```python
 import openai
@@ -115,6 +122,21 @@ resp = openai.ChatCompletion.create(
     messages = [{ "role":"user", "content": "Which moutain is the second highest one in the world?" }]
 )
 print(resp.choices[0].message.content)
+```
+
+### Create Embeddings
+```python
+import openai
+
+openai.api_base = "http://localhost:8000/api/v1"
+openai.api_key = "none"
+
+embeddings = openai.Embedding.create(
+  model="gte-large",
+  input="The food was delicious and the waiter..."
+)
+
+print(embeddings)
 ```
 
 ### List LLM Models
