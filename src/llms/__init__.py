@@ -11,6 +11,7 @@ from .chatglm import HANDLERS as CHATGLM_HANDLERS
 from .internlm import HANDLERS as INTERNLM_HANDLERS
 from .llama import HANDLERS as LLAMA_HANDLERS
 from .freewilly import HANDLERS as FREE_WILLY_HANDLERS
+from .qwen import HANDLERS as QWEN_HANDLERS
 
 logger = get_logger(__name__)
 
@@ -23,6 +24,7 @@ models = {
     "Llama-2-7b-chat-hf": LLAMA_HANDLERS,
     "Llama-2-13b-chat-hf": LLAMA_HANDLERS,
     "FreeWilly2": FREE_WILLY_HANDLERS,
+    "Qwen-7B-Chat": QWEN_HANDLERS,
 }
 
 load_dotenv()

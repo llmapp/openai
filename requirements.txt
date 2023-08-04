@@ -2,6 +2,7 @@ fastapi
 python-dotenv
 python-jose
 python-multipart
+pydantic==1.10.11
 sentence-transformers
 sse-starlette
 tiktoken
@@ -11,6 +12,9 @@ transformers_stream_generator==0.0.4
 uvicorn
 sentencepiece
 accelerate>=0.20.3
+
+# for QWen model
+einops
 
 # for Stable Diffusion
 diffusers

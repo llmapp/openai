@@ -1,6 +1,6 @@
-# OpenAI.mini
+#  [WIP] OpenAI.mini
 
-This repo implements OpenAI style APIs for large language models. With this repo, you can chat with LLMs using the [`openai` libraries](https://platform.openai.com/docs/api-reference)
+This repo implements OpenAI APIs with open source models, for example, `LLaMA` for [chat](https://platform.openai.com/docs/api-reference/chat), `Whisper` for [audio](https://platform.openai.com/docs/api-reference/audio), `SDXL` for [image](https://platform.openai.com/docs/api-reference/images), `intfloat/e5-large-v2` for [embeddings](https://platform.openai.com/docs/api-reference/embeddings), and so on. With this repo, you can interact with LLMs using the [`openai` libraries](https://platform.openai.com/docs/api-reference) or the [`LangChain`](https://python.langchain.com/) library.
 
 ## Development
 
@@ -18,51 +18,44 @@ Notice: the models can be loadded on startup or on the fly.
 ## Status
 
 | Services          | API                      | Status           | Description             |
-| :-----------------| :------------------------| :----------------| :-----------------------|
-| Authorization     |                          |                  |                         |
-| Models            |                          |                  |                         |
-|                   | List models              | Done             |                         |
-|                   | Retrieve model           |                  |                         |
-| Chat              |                          |                  | Support Multi. LLMs     |
-|                   | Create chat completion   | Partial Done     | Response format         |
-| Completions       |                          |                  |                         |
-|                   | Create completion        |                  |                         |
-| Images            |                          |                  |                         |
-|                   | Create image             | Partial Done     |                         |
-|                   | Create image edit        |                  |                         |
-|                   | Create image variation   |                  |                         |
-| Embeddings        |                          |                  | Support Multi. LLMs     |
-|                   | Create embeddings        | Done             |                         |
-| Audio             |                          |                  |                         |
-|                   | Create transcription     | Done             |                         |
-|                   | Create translation       | Done             |                         |
-| Files             |                          |                  |                         |
-|                   | List files               | Done             |                         |
-|                   | Upload file              | Done             |                         |
-|                   | Delete file              | Done             |                         |
-|                   | Retrieve file            | Done             |                         |
-|                   | Retrieve file content    | Done             |                         |
-| Fine-tunes        |                          |                  |                         |
-|                   | Create fine-tune         |                  |                         |
-|                   | List fine-tunes          |                  |                         |
-|                   | Retrieve fine-tune       |                  |                         |
-|                   | Cancel fine-tune         |                  |                         |
-|                   | List fine-tune events    |                  |                         |
-|                   | Delete fine-tune model   |                  |                         |
-| Moderations       |                          |                  |                         |
-| Edits             |                          |                  |                         |
+| :-----------------| :------------------------------------------------------------------------------------------------------| :----------------| :-----------------------|
+| Authorization     |                                                                                                        |                  |                         |
+| Models            | [List models](https://platform.openai.com/docs/api-reference/models/list)                              | ✅ Done          |                         |
+| Models            | [Retrieve model](https://platform.openai.com/docs/api-reference/models/retrieve)                       |                  |                         |
+| Chat              | [Create chat completion](https://platform.openai.com/docs/api-reference/chat/create)                   | Partial Done     | Support Multi. LLMs     |
+| Completions       | [Create completion](https://platform.openai.com/docs/api-reference/completions/create)                 |                  |                         |
+| Images            | [Create image](https://platform.openai.com/docs/api-reference/images/create)                           | Partial Done     |                         |
+| Images            | [Create image edit](https://platform.openai.com/docs/api-reference/images/create-edit)                 |                  |                         |
+| Images            | [Create image variation](https://platform.openai.com/docs/api-reference/images/create-variation)       |                  |                         |
+| Embeddings        | [Create embeddings](https://platform.openai.com/docs/api-reference/embeddings/create)                  | ✅ Done          | Support Multi. LLMs     |
+| Audio             | [Create transcription](https://platform.openai.com/docs/api-reference/audio/create-transcription)      | ✅ Done          |                         |
+| Audio             | [Create translation](https://platform.openai.com/docs/api-reference/audio/create-translation)          | ✅ Done          |                         |
+| Files             | [List files](https://platform.openai.com/docs/api-reference/files/list)                                | ✅ Done          |                         |
+| Files             | [Upload file](https://platform.openai.com/docs/api-reference/files/upload)                             | ✅ Done          |                         |
+| Files             | [Delete file](https://platform.openai.com/docs/api-reference/files/delete)                             | ✅ Done          |                         |
+| Files             | [Retrieve file](https://platform.openai.com/docs/api-reference/files/retrieve)                         | ✅ Done          |                         |
+| Files             | [Retrieve file content](https://platform.openai.com/docs/api-reference/files/retrieve-content)         | ✅ Done          |                         |
+| Fine-tunes        | [Create fine-tune](https://platform.openai.com/docs/api-reference/fine-tunes/create)                   |                  |                         |
+| Fine-tunes        | [List fine-tunes](https://platform.openai.com/docs/api-reference/fine-tunes/list)                      |                  |                         |
+| Fine-tunes        | [Retrieve fine-tune](https://platform.openai.com/docs/api-reference/fine-tunes/retrieve)               |                  |                         |
+| Fine-tunes        | [Cancel fine-tune](https://platform.openai.com/docs/api-reference/fine-tunes/cancel)                   |                  |                         |
+| Fine-tunes        | [List fine-tune events](https://platform.openai.com/docs/api-reference/fine-tunes/events)              |                  |                         |
+| Fine-tunes        | [Delete fine-tune model](https://platform.openai.com/docs/api-reference/fine-tunes/delete-model)       |                  |                         |
+| Moderations       | [Create moderation](https://platform.openai.com/docs/api-reference/moderations/create)                 |                  |                         |
+| Edits             | [Create edit](https://platform.openai.com/docs/api-reference/edits/create)                             |                  |                         |
 
 ## Supported Language Models
 
 | Model                                                                                 | #Params | Checkpoint link                                                                         |
 | :------------------------------------------------------------------------------------ | :------ | :-------------------------------------------------------------------------------------- |
 | [FreeWilly2](https://stability.ai/blog/freewilly-large-instruction-fine-tuned-models) | 70B     | [stabilityai/FreeWilly2](https://huggingface.co/stabilityai/FreeWilly2)                 |
+| [Baichuan-13B-Chat](https://github.com/baichuan-inc/Baichuan-13B)                     | 13B     | [baichuan-inc/Baichuan-13B-Chat](https://huggingface.co/baichuan-inc/Baichuan-13B-Chat) |
 | [Llama-2-13b-chat-hf](https://github.com/facebookresearch/llama)                      | 13B     | [meta-llama/Llama-2-13b-chat-hf](https://huggingface.co/meta-llama/Llama-2-13b-chat-hf) |
 | [Llama-2-7b-chat-hf](https://github.com/facebookresearch/llama)                       | 7B      | [meta-llama/Llama-2-7b-chat-hf](https://huggingface.co/meta-llama/Llama-2-7b-chat-hf)   |
-| [Baichuan-13B-Chat](https://github.com/baichuan-inc/Baichuan-13B)                     | 13B     | [baichuan-inc/Baichuan-13B-Chat](https://huggingface.co/baichuan-inc/Baichuan-13B-Chat) |
+| [Qwen-7B-Chat](https://github.com/QwenLM/Qwen-7B) | 7B     | [Qwen/Qwen-7B-Chat](https://huggingface.co/Qwen/Qwen-7B-Chat)                 |
+| [internlm-chat-7b](https://github.com/InternLM/InternLM)                              | 7B      | [internlm/internlm-chat-7b](https://huggingface.co/internlm/internlm-chat-7b)           |
 | [chatglm2-6b](https://github.com/THUDM/ChatGLM2-6B)                                   | 6B      | [THUDM/chatglm2-6b](https://huggingface.co/THUDM/chatglm2-6b)                           |
 | [chatglm-6b](https://github.com/THUDM/ChatGLM-6B)                                     | 6B      | [THUDM/chatglm-6b](https://huggingface.co/THUDM/chatglm-6b)                             |
-| [internlm-chat-7b](https://github.com/InternLM/InternLM)                              | 7B      | [internlm/internlm-chat-7b](https://huggingface.co/internlm/internlm-chat-7b)           |
 
 ## Supported Embedding Models
 
