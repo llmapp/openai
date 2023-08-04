@@ -24,7 +24,7 @@ Notice: the models can be loadded on startup or on the fly.
 | Models            | [Retrieve model](https://platform.openai.com/docs/api-reference/models/retrieve)                       |                  |                         |
 | Chat              | [Create chat completion](https://platform.openai.com/docs/api-reference/chat/create)                   | Partial Done     | Support Multi. LLMs     |
 | Completions       | [Create completion](https://platform.openai.com/docs/api-reference/completions/create)                 |                  |                         |
-| Images            | [Create image](https://platform.openai.com/docs/api-reference/images/create)                           | Partial Done     |                         |
+| Images            | [Create image](https://platform.openai.com/docs/api-reference/images/create)                           | ✅ Done          |                         |
 | Images            | [Create image edit](https://platform.openai.com/docs/api-reference/images/create-edit)                 |                  |                         |
 | Images            | [Create image variation](https://platform.openai.com/docs/api-reference/images/create-variation)       |                  |                         |
 | Embeddings        | [Create embeddings](https://platform.openai.com/docs/api-reference/embeddings/create)                  | ✅ Done          | Support Multi. LLMs     |

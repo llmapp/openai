@@ -6,7 +6,7 @@ from uuid import uuid4
 from ..type import DeleteFileResponse, ListFilesResponse, UploadFileResponse
 
 load_dotenv()
-UPLOAD_FOLDER = os.getenv("UPLOAD_FOLDER", "/tmp/llm-as-openai/files")
+UPLOAD_FOLDER = os.getenv("UPLOAD_FOLDER", "/tmp/openai.mini/files")
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 

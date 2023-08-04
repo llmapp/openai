@@ -6,6 +6,7 @@ from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 
 from .llms import get_model as get_llm_model
 from .diffusers import get_model as get_diffuser_model
@@ -58,6 +59,11 @@ api.include_router(file_router, prefix=prefix, tags=["File"])
 api.include_router(fine_tune_router, prefix=prefix, tags=["FineTune"])
 api.include_router(models_router, prefix=prefix, tags=["Model"])
 api.include_router(image_router, prefix=prefix, tags=["Image"])
+
+IMAGE_FOLDER = os.getenv("IMAGE_FOLDER", "/tmp/openai.mini/images")
+if not os.path.exists(IMAGE_FOLDER):
+    os.makedirs(IMAGE_FOLDER)
+api.mount("/images", StaticFiles(directory=IMAGE_FOLDER), name="images")
 
 
 @api.on_event("shutdown")
