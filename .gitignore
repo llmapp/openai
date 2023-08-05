@@ -1,6 +1,8 @@
-# Ignore models except the .gitkeep file
+# Ignore web, models except the .gitkeep file
 models/*
 !models/.gitkeep
+web/*
+!web/.gitkeep
 
 # Ignore Python byte-code files
 *.pyc
