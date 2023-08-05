@@ -1,4 +1,6 @@
-# Ignore web, models except the .gitkeep file
+# Ignore web, dist, models except the .gitkeep file
+dist/*
+!dist/.gitkeep
 models/*
 !models/.gitkeep
 web/*
