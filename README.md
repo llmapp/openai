@@ -1,6 +1,6 @@
 #  [WIP] OpenAI.mini
 
-This repo implements OpenAI APIs with open source models, for example, `LLaMA` for [chat](https://platform.openai.com/docs/api-reference/chat), `Whisper` for [audio](https://platform.openai.com/docs/api-reference/audio), `SDXL` for [image](https://platform.openai.com/docs/api-reference/images), `intfloat/e5-large-v2` for [embeddings](https://platform.openai.com/docs/api-reference/embeddings), and so on. With this repo, you can interact with LLMs using the [`openai` libraries](https://platform.openai.com/docs/api-reference) or the [`LangChain`](https://python.langchain.com/) library.
+This repo implements OpenAI APIs with open source models, for example, open source LLMs for [chat](https://platform.openai.com/docs/api-reference/chat), `Whisper` for [audio](https://platform.openai.com/docs/api-reference/audio), `SDXL` for [image](https://platform.openai.com/docs/api-reference/images), `intfloat/e5-large-v2` for [embeddings](https://platform.openai.com/docs/api-reference/embeddings), and so on. With this repo, you can interact with LLMs using the [`openai` libraries](https://platform.openai.com/docs/api-reference) or the [`LangChain`](https://python.langchain.com/) library.
 
 ## Development
 
