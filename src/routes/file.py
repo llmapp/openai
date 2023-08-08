@@ -4,9 +4,10 @@ from fastapi import APIRouter, HTTPException, UploadFile, Form
 from uuid import uuid4
 
 from ..type import DeleteFileResponse, ListFilesResponse, UploadFileResponse
+from ..utils.constants import DEFAULT_UPLOAD_FOLDER
 
 load_dotenv()
-UPLOAD_FOLDER = os.getenv("UPLOAD_FOLDER", "/tmp/openai.mini/files")
+UPLOAD_FOLDER = os.getenv("UPLOAD_FOLDER", DEFAULT_UPLOAD_FOLDER)
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 

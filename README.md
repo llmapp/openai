@@ -66,10 +66,10 @@ Notice: the models can be loadded on startup or on the fly.
 
 ## Supported Diffusion Modles
 
-| Model                                                                             | #Resp Format | Checkpoint link                                                                                             |
-| :-------------------------------------------------------------------------------- | :----------- | :---------------------------------------------------------------------------------------------------------- |
-| [stable-diffusion-xl-base-1.0](https://github.com/Stability-AI/generative-models) | b64_json     | [stabilityai/stable-diffusion-xl-base-1.0](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) |
-| [stable-diffusion-xl-base-0.9](https://github.com/Stability-AI/generative-models) | b64_json     | [stabilityai/stable-diffusion-xl-base-0.9](https://huggingface.co/stabilityai/stable-diffusion-xl-base-0.9) |
+| Model                                                                             | #Resp Format  | Checkpoint link                                                                                             |
+| :-------------------------------------------------------------------------------- | :------------ | :---------------------------------------------------------------------------------------------------------- |
+| [stable-diffusion-xl-base-1.0](https://github.com/Stability-AI/generative-models) | b64_json, url | [stabilityai/stable-diffusion-xl-base-1.0](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) |
+| [stable-diffusion-xl-base-0.9](https://github.com/Stability-AI/generative-models) | b64_json, url | [stabilityai/stable-diffusion-xl-base-0.9](https://huggingface.co/stabilityai/stable-diffusion-xl-base-0.9) |
 
 
 ## Supported Audio Models

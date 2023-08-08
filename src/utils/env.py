@@ -2,6 +2,8 @@ import os
 from dotenv import load_dotenv
 from typing import Optional
 
+from src.utils.constants import DEFAULT_MODEL_HUB_PATH
+
 load_dotenv()
 
 
@@ -13,7 +15,7 @@ def get_preload_models(env_name: str):
     return [name.strip() for name in names.split(",")]
 
 
-MODEL_HUB_PATH = os.environ.get("MODEL_HUB_PATH", "models")
+MODEL_HUB_PATH = os.environ.get("MODEL_HUB_PATH", DEFAULT_MODEL_HUB_PATH)
 
 
 def compose_model_id(model_name: str, prefix: str, suffix: Optional[str] = None, remove_prefix: bool = False, ):

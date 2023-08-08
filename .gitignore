@@ -3,6 +3,8 @@ dist/*
 !dist/.gitkeep
 models/*
 !models/.gitkeep
+hub/*
+!hub/.gitkeep
 web/*
 !web/.gitkeep
 

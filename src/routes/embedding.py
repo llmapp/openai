@@ -1,7 +1,9 @@
 import tiktoken
 from fastapi import APIRouter
 
-from ..embeddings import models, get_model
+from ..models import get_model
+from ..models.embedding import EmbeddingModel
+from ..utils.request import raise_if_invalid_model
 from ..type import EmbeddingsRequest, EmbeddingsResponse, UsageInfo
 
 embedding_router = APIRouter()
@@ -14,7 +16,7 @@ async def create_embeddings(request: EmbeddingsRequest, model_name: str = None):
         request.model = model_name
 
     embedding_model = get_model(request.model)
-    encode = models.get(request.model).get("encode")
+    raise_if_invalid_model(embedding_model, EmbeddingModel)
 
     inputs = _process_inputs(request)
 
@@ -22,7 +24,7 @@ async def create_embeddings(request: EmbeddingsRequest, model_name: str = None):
     batches = [inputs[i: min(i + 1024, len(inputs))] for i in range(0, len(inputs), 1024)]
 
     for num_batch, batch in enumerate(batches):
-        payload = {"embedding_model": embedding_model, "encode": encode, "input": batch}
+        payload = {"embedding_model": embedding_model, "input": batch}
         embedding = _get_embedding(payload)
         data += [
             {"object": "embedding", "embedding": emb, "index": num_batch * 1024 + i} for i, emb in enumerate(embedding["embedding"])
@@ -37,7 +39,7 @@ async def create_embeddings(request: EmbeddingsRequest, model_name: str = None):
             total_tokens=token_num,
             completion_tokens=None,
         ),
-    ).model_dump(exclude_none=True)
+    ).dict(exclude_none=True)
 
 
 def _process_inputs(request: EmbeddingsRequest):
@@ -56,8 +58,8 @@ def _process_inputs(request: EmbeddingsRequest):
 
 
 def _get_embedding(payload):
-    input, embedding_model, encode = payload["input"], payload["embedding_model"], payload["encode"]
-    embeddings = encode(input, embedding_model.model)
+    input, embedding_model = payload["input"], payload["embedding_model"]
+    embeddings = embedding_model.encode(input)
 
     return {
         "embedding": embeddings.tolist(),

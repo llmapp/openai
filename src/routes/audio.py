@@ -1,9 +1,11 @@
 from fastapi import APIRouter, Form, UploadFile
 from typing import Optional, Literal
 
+from ..models import get_model
+from ..models.audio import AudioModel
 
-from ..audios import models, get_model
 from ..utils.logger import get_logger
+from ..utils.request import raise_if_invalid_model
 from ..type import AudioResponse
 
 
@@ -29,9 +31,13 @@ async def create_translation(file: UploadFile, model: str = Form(...),
 
 
 def _do_transform(type: Literal['translate', 'transcribe'], file: UploadFile, model, response_format, kwargs):
-    runner = models.get(model).get(type)
     audio_model = get_model(model)
-    result = runner(file.file, audio_model, kwargs)
+    raise_if_invalid_model(audio_model, AudioModel)
+
+    runner = audio_model.transcribe if type == "transcribe" else audio_model.translate
+    # audio_model = get_model(model)
+    # result = runner(file.file, audio_model, kwargs)
+    result = runner(file.file, **kwargs)
 
     if response_format == "json":
         return AudioResponse(text=result["text"])

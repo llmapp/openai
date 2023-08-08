@@ -1,10 +1,11 @@
 
 from fastapi import APIRouter, HTTPException
 from sse_starlette.sse import EventSourceResponse
-from typing import List
 
-from ..llms import models, get_model
+from ..models import get_model
+from ..models.llm import LlmModel
 from ..type import ChatCompletionRequest, ChatCompletionResponse, ChatCompletionResponseChoice, ChatCompletionResponseStreamChoice, ChatMessage, DeltaMessage
+from ..utils.request import raise_if_invalid_model
 
 
 chat_router = APIRouter(prefix="/chat")
@@ -13,46 +14,24 @@ chat_router = APIRouter(prefix="/chat")
 @chat_router.post("/completions", response_model=ChatCompletionResponse)
 async def chat_completions(request: ChatCompletionRequest):
     if request.messages[-1].role != "user":
-        raise HTTPException(status_code=400, detail="Invalid request")
+        raise HTTPException(status_code=400, detail="Invalid request format: last message must be from user")
+    
+    model = get_model(request.model)
+    raise_if_invalid_model(model, LlmModel)
+    kwargs = _gen_kwargs(request, model.tokenizer)
 
+    stream = request.stream
+    response, extra = model.chat(request.messages, stream=stream, **kwargs)
     if request.stream:
-        return stream_chat(model_id=request.model, messages=request.messages)
+        predict = _predict(model.id, response, extra)
+        return EventSourceResponse(predict, media_type="text/event-stream")
     else:
-        return chat(model_id=request.model, messages=request.messages)
-
-
-def chat(model_id: str, messages: List[ChatMessage]):
-    handlers = models.get(model_id)
-    if handlers is None:
-        raise ValueError(f"Model {model_id} not found")
-
-    model, tokenizer = get_model(model_id)
-
-    chat = handlers.get("chat")
-    if chat is not None:
-        response, _ = chat(model, tokenizer, messages)
-    else:
-        # TODO: if chat is not available, use stream_chat
-        raise NotImplementedError()
-
-    choice_data = ChatCompletionResponseChoice(
-        index=0,
-        message=ChatMessage(role="assistant", content=response),
-        finish_reason="stop"
-    )
-    return ChatCompletionResponse(model=model_id, choices=[choice_data], object="chat.completion")
-
-
-def stream_chat(model_id: str, messages: List[ChatMessage]):
-    handlers = models.get(model_id)
-    if handlers is None:
-        raise ValueError(f"Model {model_id} not found")
-
-    model, tokenizer = get_model(model_id)
-
-    generate, stream_type = handlers.get("stream_chat")(model, tokenizer, messages)
-    predict = _predict(model_id, generate, stream_type)
-    return EventSourceResponse(predict, media_type="text/event-stream")
+        choice_data = ChatCompletionResponseChoice(
+            index=0,
+            message=ChatMessage(role="assistant", content=response),
+            finish_reason="stop"
+        )
+        return ChatCompletionResponse(model=model.id, choices=[choice_data], object="chat.completion")
 
 
 def _predict(model_id: str, generate, stream_type: str):
@@ -71,11 +50,8 @@ def _predict(model_id: str, generate, stream_type: str):
 
             if len(new_response) == current_length:
                 continue
-
             delta = new_response[current_length:]
-
             current_length = len(new_response)
-
         yield _compose_chunk(model_id, DeltaMessage(content=delta))
 
     yield _compose_chunk(model_id, DeltaMessage())
@@ -91,3 +67,11 @@ def _compose_chunk(model_id: str, message: DeltaMessage):
     chunk = ChatCompletionResponse(model=model_id, choices=[choice_data], object="chat.completion.chunk")
 
     return "{}".format(chunk.json(exclude_unset=True, ensure_ascii=False))
+
+def _gen_kwargs(request: ChatCompletionRequest, tokenizer):
+    kwargs = {}
+    # stop_words_ids
+    if request.stop is not None:
+        kwargs["stop_words_ids"] = [tokenizer.encode(word) for word in request.stop]
+
+    return kwargs

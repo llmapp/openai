@@ -8,9 +8,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 
-from .llms import get_model as get_llm_model
-from .diffusers import get_model as get_diffuser_model
-from .audios import get_model as get_audio_model
+from .models import get_model
 
 from .routes.audio import audio_router
 from .routes.chat import chat_router
@@ -20,6 +18,7 @@ from .routes.finetune import fine_tune_router
 from .routes.image import image_router
 from .routes.models import models_router
 
+from .utils.constants import DEFAULT_IMAGE_FOLDER
 from .utils.env import get_preload_models
 from .utils.logger import get_logger
 from .utils.cors import add_cors_middleware
@@ -30,7 +29,7 @@ logger = get_logger(__name__)
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):  # collects GPU memory
+async def lifespan(app: FastAPI):
     yield
 
     gc.collect()
@@ -60,7 +59,7 @@ api.include_router(fine_tune_router, prefix=prefix, tags=["FineTune"])
 api.include_router(models_router, prefix=prefix, tags=["Model"])
 api.include_router(image_router, prefix=prefix, tags=["Image"])
 
-IMAGE_FOLDER = os.getenv("IMAGE_FOLDER", "/tmp/openai.mini/images")
+IMAGE_FOLDER = os.getenv("IMAGE_FOLDER", DEFAULT_IMAGE_FOLDER)
 if not os.path.exists(IMAGE_FOLDER):
     os.makedirs(IMAGE_FOLDER)
 api.mount("/images", StaticFiles(directory=IMAGE_FOLDER), name="images")
@@ -81,17 +80,17 @@ if __name__ == '__main__':
     preload_llms = get_preload_models("LLMS_PRELOAD")
     print("preloading models:", preload_llms)
     for name in preload_llms:
-        get_llm_model(name)
+        get_model(name)
 
     preload_diffusers = get_preload_models("DIFFUSERS_PRELOAD")
     print("preloading diffusers models:", preload_diffusers)
     for name in preload_diffusers:
-        get_diffuser_model(name)
+        get_model(name)
 
     preload_audios = get_preload_models("AUDIOS_PRELOAD")
     print("preloading audio models:", preload_audios)
     for name in preload_audios:
-        get_audio_model(name)
+        get_model(name)
 
     import uvicorn
     uvicorn.run("src.api:api",
