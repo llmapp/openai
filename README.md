@@ -21,7 +21,7 @@ Notice: the models can be loadded on startup or on the fly.
 | :-----------------| :------------------------------------------------------------------------------------------------------| :----------------| :-----------------------|
 | Authorization     |                                                                                                        |                  |                         |
 | Models            | [List models](https://platform.openai.com/docs/api-reference/models/list)                              | ✅ Done          |                         |
-| Models            | [Retrieve model](https://platform.openai.com/docs/api-reference/models/retrieve)                       |                  |                         |
+| Models            | [Retrieve model](https://platform.openai.com/docs/api-reference/models/retrieve)                       | ✅ Done          |                         |
 | Chat              | [Create chat completion](https://platform.openai.com/docs/api-reference/chat/create)                   | Partial Done     | Support Multi. LLMs     |
 | Completions       | [Create completion](https://platform.openai.com/docs/api-reference/completions/create)                 |                  |                         |
 | Images            | [Create image](https://platform.openai.com/docs/api-reference/images/create)                           | ✅ Done          |                         |

@@ -1,7 +1,7 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 
-from ..models import list
-from ..type import ModelList, ChatMessage
+from ..models import list, get_model
+from ..type import ModelList, ModelCard
 
 models_router = APIRouter(prefix="/models")
 
@@ -10,12 +10,9 @@ models_router = APIRouter(prefix="/models")
 async def list_models():
     return ModelList(data=list())
 
-@models_router.get("/test")
-async def test():
-    model_id = "Qwen-7B-Chat"
-    from ..models import get_model
-    model = get_model(model_id)
-
-    response = model.chat(messages=[ChatMessage(role="user", content="你好")])
-
-    return {"test": response}
+@models_router.get("/{id}", response_model=ModelCard)
+async def retrieve_model(id: str):
+    model = get_model(id, skip_load=True)
+    if model is None:
+        raise HTTPException(status_code=404, detail=f"Model {id} not found")
+    return model.to_card()

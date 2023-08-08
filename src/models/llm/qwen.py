@@ -1,7 +1,4 @@
-from transformers import AutoTokenizer, AutoModel
 from typing import List, Optional
-
-from src.utils.env import compose_model_id
 
 from .base import LlmModel, split_messages
 
