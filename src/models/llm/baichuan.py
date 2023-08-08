@@ -7,7 +7,6 @@ from src.type import ChatMessage
 class Baichuan(LlmModel):
     def chat(self, messages: List[ChatMessage], stream: Optional[bool]=False, **kwargs):
         msgs = [_chat_message_to_baichuan_message(m) for m in messages]
-        super().chat(msgs, stream=stream) #, **kwargs)
         response = self.model.chat(self.tokenizer, msgs, stream=stream) #, **kwargs)
         if stream:
             return response, "string"
