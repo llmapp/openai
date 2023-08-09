@@ -61,6 +61,9 @@ Notice: the models can be loadded on startup or on the fly.
 
 | Model                                                                                 | Embedding Dim.| Sequnce Length | Checkpoint link                                                                         |
 | :------------------------------------------------------------------------------------ | :------ | :----- | :-------------------------------------------------------------------------------------- |
+| [bge-large-zh](https://huggingface.co/BAAI/bge-large-zh) | 1024     | ? | [BAAI/bge-large-zh](https://huggingface.co/BAAI/bge-large-zh)                 |
+| [m3e-large](https://huggingface.co/moka-ai/m3e-large) | 1024     | ? | [moka-ai/m3e-large](https://huggingface.co/moka-ai/m3e-large)                 |
+| [text2vec-large-chinese](https://huggingface.co/GanymedeNil/text2vec-large-chinese) | 1024     | ? | [GanymedeNil/text2vec-large-chinese](https://huggingface.co/GanymedeNil/text2vec-large-chinese)                 |
 | [gte-large](https://huggingface.co/thenlper/gte-large) | 1024     | 512 | [thenlper/gte-large](https://huggingface.co/thenlper/gte-large)                 |
 | [e5-large-v2](https://huggingface.co/intfloat/e5-large-v2) | 1024     | 512 | [intfloat/e5-large-v2](https://huggingface.co/intfloat/e5-large-v2)                 |
 
