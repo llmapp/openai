@@ -24,9 +24,17 @@ class ModelList(BaseModel):
     data: List[ModelCard] = []
 
 
+class FunctionCallResponse(BaseModel):
+    name: str
+    arguments: str
+    # thought: str = None
+
+
 class ChatMessage(BaseModel):
     role: Role
-    content: str
+    content: str = None
+    function_call: Optional[FunctionCallResponse] = None
+    functions: Optional[List[Dict[str, Any]]] = None
 
 
 class DeltaMessage(BaseModel):
@@ -67,8 +75,8 @@ class ChatCompletionRequest(BaseModel):
     stream: Optional[bool] = False
 
     functions: Optional[List[ChatFunction]] = None
-    function_call: Optional[str] = None
-    stop: Optional[List[str]] = None
+    function_call: Union[str, Dict[str, str]] = "auto"
+    stop: Optional[Union[str, List[str]]] = None
     presence_penalty: Optional[float] = 0
     frequnecy_penalty: Optional[float] = 0
     logit_bias: Optional[dict] = None
@@ -78,7 +86,7 @@ class ChatCompletionRequest(BaseModel):
 class ChatCompletionResponseChoice(BaseModel):
     index: int
     message: ChatMessage
-    finish_reason: Literal["stop", "length"]
+    finish_reason: Literal["stop", "length", "function_call"] = None
 
 
 class ChatCompletionResponseStreamChoice(BaseModel):
@@ -96,9 +104,9 @@ class UsageInfo(BaseModel):
 
 class ChatCompletionResponse(BaseModel):
     id: Optional[str] = None
-    model: str
     object: Literal["chat.completion", "chat.completion.chunk"]
     created: Optional[int] = Field(default_factory=lambda: int(time.time()))
+    model: str
     choices: List[Union[ChatCompletionResponseChoice, ChatCompletionResponseStreamChoice]]
     usage: Optional[UsageInfo] = None
 

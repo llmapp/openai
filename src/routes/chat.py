@@ -4,7 +4,7 @@ from sse_starlette.sse import EventSourceResponse
 
 from ..models import get_model
 from ..models.llm import LlmModel
-from ..type import ChatCompletionRequest, ChatCompletionResponse, ChatCompletionResponseChoice, ChatCompletionResponseStreamChoice, ChatMessage, DeltaMessage
+from ..type import ChatCompletionRequest, ChatCompletionResponse, ChatCompletionResponseChoice, ChatCompletionResponseStreamChoice, ChatMessage, DeltaMessage, UsageInfo
 from ..utils.request import raise_if_invalid_model
 
 
@@ -31,7 +31,9 @@ async def chat_completions(request: ChatCompletionRequest):
             message=ChatMessage(role="assistant", content=response),
             finish_reason="stop"
         )
-        return ChatCompletionResponse(model=model.id, choices=[choice_data], object="chat.completion")
+        # FIXME: usage
+        usage = UsageInfo()
+        return ChatCompletionResponse(model=model.id, choices=[choice_data], object="chat.completion", usage=usage)
 
 
 def _predict(model_id: str, generate, stream_type: str):
