@@ -27,14 +27,13 @@ class ModelList(BaseModel):
 class FunctionCallResponse(BaseModel):
     name: str
     arguments: str
-    # thought: str = None
 
 
 class ChatMessage(BaseModel):
     role: Role
     content: str = None
+    name: Optional[str] = None
     function_call: Optional[FunctionCallResponse] = None
-    functions: Optional[List[Dict[str, Any]]] = None
 
 
 class DeltaMessage(BaseModel):

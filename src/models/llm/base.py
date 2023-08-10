@@ -4,7 +4,7 @@ from typing import Any, List, Literal, Optional
 
 from ..base import Model
 from src.utils.env import compose_model_id
-from src.type import ChatMessage
+from src.type import ChatMessage, ChatFunction
 
 StreamType = Literal["tuple", "string"]
 
@@ -42,13 +42,13 @@ class LlmModel(Model):
         return self
 
 
-    def chat(self, messages: List[str], stream: Optional[bool] = False, **kwargs):
+    def chat(self, messages: List[str], functions: Optional[List[ChatFunction]] = None, stream: Optional[bool] = False, **kwargs):
         query, history = split_messages(messages)
         if stream:
-            response = self.model.chat(self.tokenizer, query, history, stream=True, **kwargs)
+            response = self.model.chat(self.tokenizer, query, history=history, functions=functions, stream=True, **kwargs)
             return response, self.stream_type
         else:
-            return self.model.chat(self.tokenizer, query, history=history, **kwargs)
+            return self.model.chat(self.tokenizer, query, history=history, functions=functions, **kwargs)
 
 
 

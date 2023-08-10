@@ -24,7 +24,6 @@ _MODELS = [
 
     EmbeddingModel("BAAI/bge-large-zh", normalize_embeddings=True),
     EmbeddingModel("moka-ai/m3e-large"),
-    EmbeddingModel("GanymedeNil/text2vec-large-chinese"),
     EmbeddingModel("thenlper/gte-large"),
     EmbeddingModel("infloat/e5-large-v2"),
     EmbeddingModel("infloat/multilingual-e5-large"),
