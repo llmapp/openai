@@ -1,6 +1,7 @@
 
 from fastapi import APIRouter, HTTPException
 from sse_starlette.sse import EventSourceResponse
+from typing import Optional
 
 from ..models import get_model
 from ..models.llm import LlmModel
@@ -61,15 +62,15 @@ def _predict(model_id: str, generate, stream_type: str):
             current_length = len(new_response)
         yield _compose_chunk(model_id, DeltaMessage(content=delta))
 
-    yield _compose_chunk(model_id, DeltaMessage())
+    yield _compose_chunk(model_id, DeltaMessage(), "stop")
     yield '[DONE]'
 
 
-def _compose_chunk(model_id: str, message: DeltaMessage):
+def _compose_chunk(model_id: str, message: DeltaMessage, finish_reason: Optional[str] = None):
     choice_data = ChatCompletionResponseStreamChoice(
         index=0,
         delta=message,
-        finish_reason="stop"
+        finish_reason=finish_reason
     )
     chunk = ChatCompletionResponse(model=model_id, choices=[choice_data], object="chat.completion.chunk")
 

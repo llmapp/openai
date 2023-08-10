@@ -208,3 +208,8 @@ print(transcript.text)
 ## Acknowledgement
 
 项目参考了很多大佬的代码，例如 @xusenlinzy 大佬的[api-for-open-llm](https://github.com/xusenlinzy/api-for-open-llm/), @hiyouga 大佬的[LLaMA-Efficient-Tuning](https://github.com/hiyouga/LLaMA-Efficient-Tuning) 等，表示感谢。
+
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=llmapp/openai.mini&type=Date)](https://star-history.com/#llmapp/openai.mini)
