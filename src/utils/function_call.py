@@ -74,16 +74,24 @@ def build_function_call_message(messages, functions, function_call="auto"):
 def build_chat_message(response: str) -> ChatMessage:
     parsed = _parse_qwen_plugin_call(response)
     if parsed is None:
-        return ChatMessage(role="assistant", content=response)
+        return ChatMessage(role="assistant", content=response), "stop"
     else:
-        name, args = parsed
-        function_call = FunctionCallResponse(name=name, arguments=args)
-        return ChatMessage(role="assistant", content=None, function_call=function_call)
+        name, args, final = parsed
+        if final:
+            return ChatMessage(role="assistant", content=final), "stop"
+        else:
+            function_call = FunctionCallResponse(name=name, arguments=args)
+            return ChatMessage(role="assistant", content=None, function_call=function_call), "function_call"
 
 def _parse_qwen_plugin_call(text: str) -> Union[Tuple[str, str], None]:
     i = text.rfind('\nAction:')
     j = text.rfind('\nAction Input:')
     k = text.rfind('\nObservation:')
+    l = text.rfind('\nFinal Answer:')
+
+    if l >= 0:
+        final = text[l + len('\nFinal Answer:'):].strip()
+        return None, None, final
 
     if 0 <= i < j:  # If the text has `Action` and `Action input`,
         if k < j:  # but does not contain `Observation`,
@@ -95,5 +103,5 @@ def _parse_qwen_plugin_call(text: str) -> Union[Tuple[str, str], None]:
     if 0 <= i < j < k:
         name = text[i + len('\nAction:'): j].strip()
         args = text[j + len('\nAction Input:'): k].strip()
-        return name, args
+        return name, args, None
     return None

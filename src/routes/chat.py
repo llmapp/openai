@@ -14,31 +14,27 @@ chat_router = APIRouter(prefix="/chat")
 
 @chat_router.post("/completions", response_model=ChatCompletionResponse)
 async def chat_completions(request: ChatCompletionRequest):
-    if request.messages[-1].role != "user":
-        raise HTTPException(status_code=400, detail="Invalid request format: last message must be from user")
-    
-    # FIXME:
-    if request.functions is not None and request.model != "Qwen-7B-Chat":
-        raise HTTPException(status_code=400, detail="Invalid request format: functions only supported by Qwen-7B-Chat")
-    
     model = get_model(request.model)
     raise_if_invalid_model(model, LlmModel)
     kwargs = _gen_kwargs(request, model.tokenizer)
 
     stream = request.stream
     response, extra = model.chat(request.messages, functions=request.functions, stream=stream, **kwargs)
-    # FIXME: finish_reason
-    need = need_function_call(messages=request.messages, functions=request.functions)
-    finish_reason = "function_call" if need else "stop"
     if request.stream:
         predict = _predict(model.id, response, extra)
         return EventSourceResponse(predict, media_type="text/event-stream")
     else:
-        # compose function call response
+        finish_reason = "stop"
+
+        # FIXME:
+        need = need_function_call(messages=request.messages, functions=request.functions)
+        if need and model.org != "Qwen":
+            raise HTTPException(status_code=400, detail="Invalid request format: functions only supported by Qwen-7B-Chat")
         if need:
-            message = build_chat_message(response)
+            message, finish_reason = build_chat_message(response)
         else:
             message=ChatMessage(role="assistant", content=response)
+
         choice_data = ChatCompletionResponseChoice( index=0, message=message, finish_reason=finish_reason)
         # FIXME: usage
         usage = UsageInfo()
