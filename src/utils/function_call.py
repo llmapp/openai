@@ -31,6 +31,20 @@ Begin!
 
 Question: {query}"""
 
+#########################################################
+#  We may add previous conversation history after Begin!
+#########################################################
+# Previous conversation history:
+# {{{
+# Question: 截下淘宝、阿里云的首页
+# Thought: 我需要依次访问并截图这些网站。先从淘宝开始。
+# Action: take_screenshot
+# Action Input: https://www.taobao.com
+# Thought: 还需要访问阿里云。
+# Action: take_screenshot
+# Action Input: https://www.aliyun.com
+# }}}
+
 def need_function_call(messages, functions):
     if functions is not None and len(functions) > 0:
         return True
