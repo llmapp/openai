@@ -72,7 +72,10 @@ def _predict(model_id: str, generate, stream_type: str, with_function_call: bool
 
         if with_function_call:
             if found_action_name:
-                # FIXME: do not return \nObservation:
+                # FIXME: do not return \nObservation
+                # It is a tricky way to stop before the \nObservation:
+                if total_response.rfind("\nObserv") > 0:
+                    break
                 yield _compose_chunk(model_id, build_fc_args_message(delta))
                 continue
             else:
