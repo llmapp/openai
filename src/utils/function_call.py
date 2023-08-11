@@ -1,12 +1,13 @@
 import json
 from typing import Tuple, Union
 
-from ..type import ChatMessage, FunctionCallResponse
+from ..type import ChatMessage, DeltaMessage, FunctionCallResponse
 
 OBSERVATION = "Observation"
 
 TOOL_DESC = """{name}: Call this tool to interact with the {name} API. \
-What is the {name} API useful for? {description}. \
+What is the {name} API useful for? \
+{description} \
 Parameters: {parameters}. Format the arguments as a JSON object."""
 
 
@@ -82,6 +83,15 @@ def build_chat_message(response: str) -> ChatMessage:
         else:
             function_call = FunctionCallResponse(name=name, arguments=args)
             return ChatMessage(role="assistant", content=None, function_call=function_call), "function_call"
+
+def build_fc_name_message(text: str) -> DeltaMessage:
+    i = text.rfind('\nAction:')
+    j = text.rfind('\nAction Input:')
+    name = text[i + len('\nAction:'): j].strip()
+    return DeltaMessage(function_call=FunctionCallResponse(name=name, arguments=""))
+
+def build_fc_args_message(delta: str) -> DeltaMessage:
+    return DeltaMessage(function_call=FunctionCallResponse(arguments=delta))
 
 def _parse_qwen_plugin_call(text: str) -> Union[Tuple[str, str], None]:
     i = text.rfind('\nAction:')

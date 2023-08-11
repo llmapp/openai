@@ -25,8 +25,8 @@ class ModelList(BaseModel):
 
 
 class FunctionCallResponse(BaseModel):
-    name: str
-    arguments: str
+    name: Optional[str]
+    arguments: Optional[str]
 
 
 class ChatMessage(BaseModel):
@@ -39,6 +39,7 @@ class ChatMessage(BaseModel):
 class DeltaMessage(BaseModel):
     role: Optional[Role] = None
     content: Optional[str] = None
+    function_call: Optional[FunctionCallResponse] = None
 
 
 class ChatFunction(BaseModel):
@@ -91,7 +92,7 @@ class ChatCompletionResponseChoice(BaseModel):
 class ChatCompletionResponseStreamChoice(BaseModel):
     index: int
     delta: DeltaMessage
-    finish_reason: Optional[Literal["stop", "length"]] = None
+    finish_reason: Optional[Literal["stop", "length", "function_call"]] = None
 
 
 class UsageInfo(BaseModel):

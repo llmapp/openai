@@ -14,7 +14,7 @@ class LLaMA(LlmModel):
         return self
     
     def chat(self, messages: List[str], stream: bool = False, token_format_config: Optional[TokenFormatConfig] = None, **kwargs):
-        streamer = _stream_chat(self.model, self.tokenizer, messages, token_format_config, **kwargs)
+        streamer = _stream_chat(self.model, self.tokenizer, messages, token_format_config) #, **kwargs)
         if stream:
             return streamer, "delta"
         else:

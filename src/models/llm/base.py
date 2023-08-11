@@ -45,10 +45,10 @@ class LlmModel(Model):
     def chat(self, messages: List[str], functions: Optional[List[ChatFunction]] = None, stream: Optional[bool] = False, **kwargs):
         query, history = split_messages(messages)
         if stream:
-            response = self.model.chat(self.tokenizer, query, history=history, functions=functions, stream=True, **kwargs)
+            response = self.model.chat(self.tokenizer, query, history=history, functions=functions, stream=True) #, **kwargs)
             return response, self.stream_type
         else:
-            return self.model.chat(self.tokenizer, query, history=history, functions=functions, **kwargs)
+            return self.model.chat(self.tokenizer, query, history=history, functions=functions) #, **kwargs)
 
 
 

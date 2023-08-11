@@ -17,4 +17,4 @@ _token_format_config = TokenFormatConfig(
 
 class FreeWilly2(LLaMA):
     def chat(self, messages: List[str], stream: bool = False, **kwargs):
-        return super().chat(messages, stream, token_format_config=_token_format_config, **kwargs)
+        return super().chat(messages, stream, token_format_config=_token_format_config) #, **kwargs)
