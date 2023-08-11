@@ -71,17 +71,19 @@ def build_function_call_message(messages, functions, function_call="auto"):
     last = ""
     for message in messages[-1::-1]:
         if message.role == "user":
-            last += REACT_PROMPT.format(tool_descs=tool_descs, tool_names=tool_names, query=message.content, OBSERVATION=OBSERVATION)
+            last = REACT_PROMPT.format(tool_descs=tool_descs, tool_names=tool_names, query=message.content, OBSERVATION=OBSERVATION) + last
             break
         elif message.role == "assistant":
             if message.function_call:
                 function_name = message.function_call.name
                 arguments = message.function_call.arguments
-                last += f"\nThought: I should call {function_name} with {arguments}"
-                last += f"\nAction: {function_name.strip()}"
-                last += f"\nAction Input: {arguments.strip()}"
+                this_part = ""
+                this_part += f"\nThought: I should call {function_name} with {arguments}"
+                this_part += f"\nAction: {function_name.strip()}"
+                this_part += f"\nAction Input: {arguments.strip()}"
+                last = this_part + last
         elif message.role == "function":
-            last += f"\n{OBSERVATION}: output of {message.name} is {str(message.content).strip()}"
+            last = f"\n{OBSERVATION}: output of {message.name} is {str(message.content).strip()}" + last
 
     return ChatMessage(role="user", content=last)
 
