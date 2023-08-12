@@ -44,7 +44,8 @@ def get_model(model_id: str, skip_load: bool = False):
     if skip_load:
         return model
 
-    loaded = _LOADED_MODELS.get(model_id)
+    real_id = model_id.split('/')[-1]
+    loaded = _LOADED_MODELS.get(real_id)
 
     if loaded is None:
         model.load()
