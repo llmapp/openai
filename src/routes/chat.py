@@ -7,7 +7,7 @@ from ..models import get_model
 from ..models.llm import LlmModel
 from ..type import ChatCompletionRequest, ChatCompletionResponse, ChatCompletionResponseChoice, ChatCompletionResponseStreamChoice, ChatMessage, DeltaMessage, FunctionCallResponse, UsageInfo
 from ..utils.request import raise_if_invalid_model
-from ..utils.function_call import need_function_call, build_chat_message, build_function_call_message, build_fc_args_message, build_fc_name_message
+from ..utils.function_call import need_function_call, build_chat_message, build_function_call_messages, build_fc_args_message, build_fc_name_message
 
 
 chat_router = APIRouter(prefix="/chat")
@@ -23,14 +23,13 @@ async def chat_completions(request: ChatCompletionRequest):
         raise HTTPException(status_code=400, detail="Invalid request format: functions only supported by Qwen-7B-Chat")
 
     kwargs = _gen_kwargs(request, model.tokenizer)
+    messages = request.messages
     if with_function_call:
-        last = build_function_call_message(request.messages, request.functions)
-        query = last.content
-        request.messages[-1].content = query
+        messages = build_function_call_messages(request.messages, request.functions)
         stop_words_ids = [model.tokenizer.encode(word) for word in ["Observation:", "Observation:\n"]]
         kwargs.update({"stop_words_ids": stop_words_ids})
 
-    response, extra = model.chat(request.messages, stream=request.stream, **kwargs)
+    response, extra = model.chat(messages, stream=request.stream, **kwargs)
     if request.stream:
         predict = _predict(model.id, response, extra, with_function_call)
         return EventSourceResponse(predict, media_type="text/event-stream")

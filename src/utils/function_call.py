@@ -52,7 +52,7 @@ def need_function_call(messages, functions):
         return True
     return False
 
-def build_function_call_message(messages, functions, function_call="auto"):
+def build_function_call_messages(messages, functions, function_call="auto"):
     if messages is None or len(messages) == 0:
         return None
     if functions is None or function_call == 'none':
@@ -69,23 +69,39 @@ def build_function_call_message(messages, functions, function_call="auto"):
 
     
     last = ""
-    for message in messages[-1::-1]:
+    for index, message in enumerate(reversed(messages)):
         if message.role == "user":
-            last = REACT_PROMPT.format(tool_descs=tool_descs, tool_names=tool_names, query=message.content, OBSERVATION=OBSERVATION) + last
+            last = _build_react_message(message, tool_descs, tool_names, OBSERVATION) + last
             break
         elif message.role == "assistant":
             if message.function_call:
-                function_name = message.function_call.name
-                arguments = message.function_call.arguments
-                this_part = ""
-                this_part += f"\nThought: I should call {function_name} with {arguments}"
-                this_part += f"\nAction: {function_name.strip()}"
-                this_part += f"\nAction Input: {arguments.strip()}"
-                last = this_part + last
+                last = _build_function_call_message(message) + last
         elif message.role == "function":
-            last = f"\n{OBSERVATION}: output of {message.name} is {str(message.content).strip()}" + last
+            last = _build_function_message(message, OBSERVATION) + last
 
-    return ChatMessage(role="user", content=last)
+    converted = [ChatMessage(role="user", content=last)]
+    # FIXME: just filter out the other messages
+    for i, message in enumerate(reversed(messages[:-(index+1)])):
+        if message.role == 'user' or (message.role == 'assistant' and message.function_call == None):
+            converted.append(message)
+
+    return [x for x in reversed(converted)]
+
+
+def _build_react_message(message, tool_descs, tool_names, OBSERVATION):
+    return REACT_PROMPT.format(tool_descs=tool_descs, tool_names=tool_names, query=message.content, OBSERVATION=OBSERVATION)
+
+def _build_function_message(message, OBSERVATION):
+    return f"\n{OBSERVATION}: output of {message.name} is {str(message.content).strip()}"
+
+def _build_function_call_message(message):
+    function_name = message.function_call.name
+    arguments = message.function_call.arguments
+    this_part = f"\nThought: I should call {function_name} with {arguments.strip()}"
+    this_part += f"\nAction: {function_name.strip()}"
+    this_part += f"\nAction Input: {arguments.strip()}"
+    return this_part
+
 
 
 def build_chat_message(response: str) -> ChatMessage:
