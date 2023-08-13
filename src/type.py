@@ -155,17 +155,16 @@ class AudioResponse(BaseModel):
     text: str
 
 
-class UploadFileResponse(BaseModel):
+class File(BaseModel):
     id: str
     object: str = "file"
     bytes: int
     created_at: int = Field(default_factory=lambda: int(time.time()))
     filename: str
-    purpose: Literal['fine-tune', 'search']  # | str
+    purpose: str # Literal['fine-tune', 'search']
 
-
-class ListFilesResponse(BaseModel):
-    data: List[UploadFileResponse]
+class ListFiles(BaseModel):
+    data: List[File]
     object: str = "list"
 
 
@@ -175,10 +174,43 @@ class DeleteFileResponse(BaseModel):
     deleted: bool
 
 
+class FineTuneHyperparams(BaseModel):
+    n_epochs: Optional[int] = None
+    batch_size: Optional[int] = None
+    prompt_loss_weight: Optional[float] = None
+    learning_rate_multiplier: Optional[float] = None
+    compute_classification_metrics: Optional[bool] = None
+    classification_positive_class: Optional[str] = None
+    classification_n_classes: Optional[int] = None
+
+
+class FineTuneEvent(BaseModel):
+    object: str = "fine-tune-event"
+    created_at: int = Field(default_factory=lambda: int(time.time()))
+    level: Literal["info", "warning", "error"]
+    message: str
+
+
+class FineTune(BaseModel):
+    id: str
+    object: str = "fine-tune"
+    created_at: int = Field(default_factory=lambda: int(time.time()))
+    updated_at: int = Field(default_factory=lambda: int(time.time()))
+    model: str
+    fine_tuned_model: Optional[str] = None
+    organization_id: str
+    status: Literal["created", "pending", "running", "succeeded", "failed", "cancelled"]
+    hyperparams: FineTuneHyperparams
+    training_files: List[File]
+    validation_files: List[File]
+    result_files: List[File]
+    events: List[FineTuneEvent]
+
+
 class CreateFineTuneRequest(BaseModel):
     training_file: str
     validation_file: Optional[str]
-    model: Literal["ada", "babbage", "curie", "davinci"] = "curie"  # | str = "curie"
+    model: Optional[str] = "curie" # Literal["ada", "babbage", "curie", "davinci"]
     n_epochs: Optional[int] = 4
     batch_size: Optional[int] = None
     learning_rate_multiplier: Optional[float] = None
@@ -190,11 +222,11 @@ class CreateFineTuneRequest(BaseModel):
     suffix: Optional[str] = None
 
 
-class CreateFineTuneResponse(BaseModel):
-    id: str
-    object: str = "fine-tune"
-    model: str
-    created_at: int = Field(default_factory=lambda: int(time.time()))
-    updated_at: int = Field(default_factory=lambda: int(time.time()))
-    status: Literal["pending", "running", "completed", "failed"]
-    # TODO: more ...
+class ListFineTunesResponse(BaseModel):
+    data: List[FineTune]
+    object: str = "list"
+
+
+class ListFineTuneEventsResponse(BaseModel):
+    data: List[FineTuneEvent]
+    object: str = "list"

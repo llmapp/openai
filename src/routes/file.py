@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from fastapi import APIRouter, HTTPException, UploadFile, Form
 from uuid import uuid4
 
-from ..type import DeleteFileResponse, ListFilesResponse, UploadFileResponse
+from ..type import DeleteFileResponse, File, ListFiles
 from ..utils.constants import DEFAULT_UPLOAD_FOLDER
 
 load_dotenv()
@@ -18,7 +18,7 @@ file_router = APIRouter(prefix="/files")
 # FIXME: Add authentication and upload file into user's folder and limit the folder capacity
 
 
-@file_router.post("", response_model=UploadFileResponse)
+@file_router.post("", response_model=File)
 async def upload_file(file: UploadFile, purpose: str = Form(...)):
     id = "file-" + str(uuid4()).replace("-", "")
     purpose = purpose.replace("_", "-")
@@ -27,10 +27,10 @@ async def upload_file(file: UploadFile, purpose: str = Form(...)):
     with open(path, "wb") as f:
         f.write(file.file.read())
 
-    return UploadFileResponse(id=id, bytes=file.size, filename=filename, purpose=purpose)
+    return File(id=id, bytes=file.size, filename=filename, purpose=purpose)
 
 
-@file_router.get("/{id}", response_model=UploadFileResponse)
+@file_router.get("/{id}", response_model=File)
 async def get_file_info(id: str):
     file = _find_file(id)
     if file:
@@ -40,7 +40,7 @@ async def get_file_info(id: str):
         path = os.path.join(UPLOAD_FOLDER, file)
         bytes = os.path.getsize(path)
         created_at = os.path.getctime(path)
-        return UploadFileResponse(id=id, bytes=bytes, filename=filename, purpose=purpose, created_at=created_at)
+        return File(id=id, bytes=bytes, filename=filename, purpose=purpose, created_at=created_at)
     else:
         raise HTTPException(status_code=404, detail=f"File {id} not found!")
 
@@ -58,7 +58,7 @@ async def get_file_content(id: str):
         raise HTTPException(status_code=404, detail=f"File {id} not found!")
 
 
-@file_router.get("", response_model=ListFilesResponse)
+@file_router.get("", response_model=ListFiles)
 async def list_files():
     data = []
     for file in os.listdir(UPLOAD_FOLDER):
@@ -68,9 +68,9 @@ async def list_files():
         path = os.path.join(UPLOAD_FOLDER, file)
         bytes = os.path.getsize(path)
         created_at = os.path.getctime(path)
-        item = UploadFileResponse(id=id, bytes=bytes, filename=filename, purpose=purpose, created_at=created_at)
+        item = File(id=id, bytes=bytes, filename=filename, purpose=purpose, created_at=created_at)
         data.append(item)
-    return ListFilesResponse(data=data)
+    return ListFiles(data=data)
 
 
 @file_router.delete("/{id}", response_model=DeleteFileResponse)
