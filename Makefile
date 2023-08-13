@@ -7,9 +7,3 @@ install:
 run:
 	python3 -m src.api
 
-package:
-	rm -rf dist/openai.mini
-	mkdir dist/openai.mini
-	mkdir dist/openai.mini/models
-	cp -r .env.example requirements.txt docs Makefile README.md src web dist/openai.mini/
-	cd dist && tar zcvf openai.mini.tar.gz openai.mini

@@ -25,7 +25,7 @@ Action Input: the input to the action
 {OBSERVATION}: the result of the action
 ... (this Thought/Action/Action Input/{OBSERVATION} can be repeated zero or more times)
 Thought: I now know the final answer
-Final Answer: the final answer to the original input question
+Final Answer: the final answer to the original input question, markdown format is preferred in final answer.
 
 Begin!
 
@@ -92,7 +92,7 @@ def _build_react_message(message, tool_descs, tool_names, OBSERVATION):
     return REACT_PROMPT.format(tool_descs=tool_descs, tool_names=tool_names, query=message.content, OBSERVATION=OBSERVATION)
 
 def _build_function_message(message, OBSERVATION):
-    return f"\n{OBSERVATION}: output of {message.name} is {str(message.content).strip()}"
+    return f"\n{OBSERVATION}: {str(message.content).strip()}"
 
 def _build_function_call_message(message):
     function_name = message.function_call.name

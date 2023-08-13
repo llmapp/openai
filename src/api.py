@@ -63,7 +63,7 @@ IMAGE_FOLDER = os.getenv("IMAGE_FOLDER", DEFAULT_IMAGE_FOLDER)
 if not os.path.exists(IMAGE_FOLDER):
     os.makedirs(IMAGE_FOLDER)
 api.mount("/images", StaticFiles(directory=IMAGE_FOLDER), name="images")
-api.mount("/", StaticFiles(directory="./web"), name="homepage")
+# api.mount("/", StaticFiles(directory="./web"), name="homepage")
 
 
 @api.on_event("shutdown")
