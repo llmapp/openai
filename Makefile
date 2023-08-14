@@ -5,5 +5,6 @@ install:
 
 .PHONY: run
 run:
-	python3 -m src.api
+	python3 -m src.api &
+	python3 -m app.server
 
