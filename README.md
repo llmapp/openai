@@ -2,20 +2,87 @@
 
 This repo implements OpenAI APIs with open source models, for example, open source LLMs for [chat](https://platform.openai.com/docs/api-reference/chat), `Whisper` for [audio](https://platform.openai.com/docs/api-reference/audio), `SDXL` for [image](https://platform.openai.com/docs/api-reference/images), `intfloat/e5-large-v2` for [embeddings](https://platform.openai.com/docs/api-reference/embeddings), and so on. With this repo, you can interact with LLMs using the [`openai` libraries](https://platform.openai.com/docs/api-reference) or the [`LangChain`](https://python.langchain.com/) library.
 
-## Development
 
-### Install dependencies
 
-- `make install`
+## How to use
 
-Start development server with the following command:
+### 1. Install dependencies
+``` shell
+pip3 install -r requirements.txt
+pip3 install -r app/requirements.txt
+```
+If you have `make`, you can also run with
+``` shell
+make install
+```
 
-- `cp .env.example .env`, and modify the `.env` file on your need
-- `make run`
+### 2. Set the environment variables, and modify it.
+``` shell
+cp .env.example .env
+# Modify the `.env` file
+```
+
+### 3. Download the model weight manually (Optional)
+If you have already downloaded the weight files, or you want to manage the model weights in some place, you can specify a `MODEL_HUB_PATH` in the `.env` and put the weight files in it. `MODEL_HUB_PATH` is set to `hub` by default.
+OpenAI.mini will first find the model weight in `MODEL_HUB_PATH`, if it does not exist in it, it will automatically download the weight files from Huggingface by the model name. The `MODEL_HUB_PATH` directory will be like this
+<details>
+  <summary>MODEL_HUB_PATH directory layout</summary>
+
+``` shell
+┌─hjmao at 573761 in ~/workspace/openai.mini/hub
+└─○ tree -L 2
+.
+├── baichuan-inc
+│   ├── Baichuan-13B-Base
+│   └── Baichuan-13B-Chat
+├── intfloat
+│   ├── e5-large-v2
+│   └── multilingual-e5-large
+├── meta-llama
+│   ├── Llama-2-13b-chat-hf
+│   └── Llama-2-7b-chat-hf
+├── openai
+│   ├── base.pt
+│   ├── large-v2.pt
+│   ├── medium.en.pt
+│   ├── medium.pt
+│   ├── small.pt
+│   └── tiny.pt
+├── Qwen
+│   └── Qwen-7B-Chat
+├── stabilityai
+│   ├── FreeWilly2
+│   ├── stable-diffusion-xl-base-0.9
+│   └── stable-diffusion-xl-base-1.0
+├── thenlper
+│   └── gte-large
+└── THUDM
+    ├── chatglm2-6b
+    └── codegeex2-6b
+```
+</details>
 
 Notice: the models can be loadded on startup or on the fly.
 
-## Status
+### 4. Start server with OpenAI.mini
+``` shell
+python3 -m src.api &
+python3 -m app.server &
+```
+or
+``` shell
+make run
+```
+
+### 5. Access the OpenAI.mini services
+OpenAI.mini have implemented most APIs of the OpenAI platform and also a ChatGPT-like web frontend.
+You may access the OpenAI.mini services with the [openai libraries]() or chat with the models in the web frontend.
+- Access as a openai service: You can use openai packages or the Langchain library to access it by setting the `openai.api_base="YOUR_OWN_IP:8000/api/v1"` and `openai.api_key="none_or_any_other_string". Find more detail [examples](https://github.com/huajianmao/openai.mini/tree/master#example-code) here.
+- Access as a ChatGPT: You can open it with your web browser with `http://YOUR_OWN_IP:8001/index.html?model=MODEL_NAME`.
+
+
+
+## OpenAI API Status
 
 | Services          | API                      | Status           | Description             |
 | :-----------------| :------------------------------------------------------------------------------------------------------| :----------------| :-----------------------|
