@@ -1,1 +1,2 @@
-from .base import FineTuneWorker, FINE_TUNES_REPO
+from .repo import FineTuneRepo
+from .worker import FineTuneWorker

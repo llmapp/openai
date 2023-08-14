@@ -1,10 +1,9 @@
 from pydantic import BaseModel
 from uuid import uuid4
 
+from .repo import FineTuneRepo
 from ..type import CreateFineTuneRequest, File, FineTune, FineTuneEvent, FineTuneHyperparams
 
-
-FINE_TUNES_REPO = {}
 
 WORKERS = {}
 
@@ -48,10 +47,10 @@ class FineTuneWorker(BaseModel):
             ]
         )
         
+        FineTuneRepo.add(fine_tune)
         worker = FineTuneWorker(training_id='1', fine_tune=fine_tune)
 
         WORKERS[fine_tune.id] = worker
-        FINE_TUNES_REPO[fine_tune.id] = fine_tune
 
         return fine_tune
 
