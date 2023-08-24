@@ -1,3 +1,6 @@
+aiofiles
+anyio
 langchain
 openai
+starlette
 wolframalpha
