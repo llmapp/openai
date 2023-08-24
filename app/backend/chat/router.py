@@ -21,6 +21,8 @@ load_dotenv()
 openai.api_base = os.getenv("OPENAI_API_BASE", None)
 openai.api_key = os.getenv("OPENAI_API_KEY", "none")
 
+FUNCTION_CALLING_LLMS = ["Qwen-7B-Chat"]
+
 def chat_completions(request: ChatCompletionRequest):
     args = {
         "model": request.model,
@@ -33,11 +35,13 @@ def chat_completions(request: ChatCompletionRequest):
         "presence_penalty": request.presence_penalty,
         "stop": request.stop
     }
-    if request.functions:
-        args["functions"] = [vars(f) for f in request.functions if f is not None]
 
-    if request.function_call:
-        args["function_call"] = vars(request.function_call) if type(request.function_call) is dict else request.function_call
+    if request.model in FUNCTION_CALLING_LLMS:
+        if request.functions:
+            args["functions"] = [vars(f) for f in request.functions if f is not None]
+
+        if request.function_call:
+            args["function_call"] = vars(request.function_call) if type(request.function_call) is dict else request.function_call
 
     for chunk in openai.ChatCompletion.create(**args):
         yield "{}".format(json.dumps(chunk, ensure_ascii=True))
