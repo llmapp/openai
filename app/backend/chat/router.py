@@ -24,7 +24,7 @@ openai.api_key = os.getenv("OPENAI_API_KEY", "none")
 def chat_completions(request: ChatCompletionRequest):
     args = {
         "model": request.model,
-        "messages": [_filter_none(vars(m)) for m in request.messages],
+        "messages": [_message_to_dict(m) for m in request.messages],
         "stream": request.stream,
         "temperature": request.temperature,
         "max_tokens": request.max_tokens,
@@ -33,6 +33,11 @@ def chat_completions(request: ChatCompletionRequest):
         "presence_penalty": request.presence_penalty,
         "stop": request.stop
     }
+    if request.functions:
+        args["functions"] = [vars(f) for f in request.functions if f is not None]
+
+    if request.function_call:
+        args["function_call"] = vars(request.function_call) if type(request.function_call) is dict else request.function_call
 
     for chunk in openai.ChatCompletion.create(**args):
         yield "{}".format(json.dumps(chunk, ensure_ascii=True))
@@ -40,3 +45,14 @@ def chat_completions(request: ChatCompletionRequest):
 
 def _filter_none(obj):
     return {k: v for k, v in obj.items() if v is not None}
+
+def _message_to_dict(message):
+    _dict = {}
+    if message.role:
+        _dict["role"] = message.role
+    if message.content:
+        _dict["content"] = message.content
+    if message.function_call:
+        _dict["function_call"] = vars(message.function_call)
+    return _dict
+

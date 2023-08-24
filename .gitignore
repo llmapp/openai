@@ -1,6 +1,7 @@
 # Ignore web, dist, models except the .gitkeep file
 files
 
+app/frontend/dist
 models/*
 !models/.gitkeep
 hub/*
