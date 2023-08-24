@@ -9,6 +9,7 @@ from fastapi.staticfiles import StaticFiles
 
 
 from .backend.plugin import plugin_router
+from .backend.chat import chat_router
 
 
 load_dotenv()
@@ -45,6 +46,7 @@ async def startup_event():
 
 prefix = os.environ.get('API_PREFIX', "/api/v1")
 api.include_router(plugin_router, prefix=prefix)
+api.include_router(chat_router, prefix=prefix)
 
 api.mount("/", StaticFiles(directory="./app/frontend/dist", html=True), name="homepage")
 

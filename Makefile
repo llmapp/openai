@@ -5,7 +5,9 @@ install:
 	echo "Notice: You should install ffmpeg manually for audio apis."
 
 .PHONY: run
-run:
-	python3 -m src.api &
+run-openai:
+	python3 -m src.api
+
+run-app:
 	python3 -m app.server
 

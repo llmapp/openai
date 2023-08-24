@@ -1,8 +1,6 @@
 # Ignore web, dist, models except the .gitkeep file
 files
 
-dist/*
-!dist/.gitkeep
 models/*
 !models/.gitkeep
 hub/*
