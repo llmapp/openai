@@ -1,8 +1,13 @@
 #  [WIP] OpenAI.mini
 
-This repo implements OpenAI APIs with open source models, for example, open source LLMs for [chat](https://platform.openai.com/docs/api-reference/chat), `Whisper` for [audio](https://platform.openai.com/docs/api-reference/audio), `SDXL` for [image](https://platform.openai.com/docs/api-reference/images), `intfloat/e5-large-v2` for [embeddings](https://platform.openai.com/docs/api-reference/embeddings), and so on. With this repo, you can interact with LLMs using the [`openai` libraries](https://platform.openai.com/docs/api-reference) or the [`LangChain`](https://python.langchain.com/) library.
+This repo implements OpenAI APIs with open source models, for example, open source LLMs for [chat](https://platform.openai.com/docs/api-reference/chat), `Whisper` for [audio](https://platform.openai.com/docs/api-reference/audio), `SDXL` for [image](https://platform.openai.com/docs/api-reference/images) and so on. With this repo, you can interact with LLMs using the [`openai` libraries](https://platform.openai.com/docs/api-reference) or the [`LangChain`](https://python.langchain.com/) library.
 
 
+## Frontend
+<div style="margin: 'auto'">
+  <img src="./docs/images/frontend.2.png" alt="OpenAI.mini" width="400" style="margin: 10px"/>
+  <img src="./docs/images/frontend.1.jpg" alt="OpenAI.mini" width="400" style="margin: 10px"/>
+</div>
 
 ## How to use
 
@@ -16,13 +21,34 @@ If you have `make`, you can also run with
 make install
 ```
 
-### 2. Set the environment variables, and modify it.
+### 2. Get frontend
+You may build the frontend with `yarn` yourself, or just download the built package from the release.
+#### Option 1: install the dependencies and build frontend
+```shell
+cd app/frontend
+yarn install
+yarn build
+```
+
+#### Option 2: download it from release
+
+1. Download the [`dist.tar.gz`](https://github.com/llmapp/openai.mini/releases/download/v0.0.2/dist.tar.gz) from release page.
+2. Extract the `dist` directory and put it in the `app/frontend` directory
+
+   Please make sure that the directory layout should be like this:
+    ```shell
+    ┌─hjmao in ~/workspace/openai.mini/app/frontend/dist
+    └─± ls
+    asset-manifest.json  assets  favicon.ico  index.html  manifest.json  robots.txt  static
+    ```
+
+### 3. Set the environment variables, and modify it.
 ``` shell
 cp .env.example .env
 # Modify the `.env` file
 ```
 
-### 3. Download the model weight manually (Optional)
+### 4. Download the model weight manually (Optional)
 If you have already downloaded the weight files, or you want to manage the model weights in some place, you can specify a `MODEL_HUB_PATH` in the `.env` and put the weight files in it. `MODEL_HUB_PATH` is set to `hub` by default.
 OpenAI.mini will first find the model weight in `MODEL_HUB_PATH`, if it does not exist in it, it will automatically download the weight files from Huggingface by the model name. The `MODEL_HUB_PATH` directory will be like this
 <details>
@@ -64,17 +90,13 @@ OpenAI.mini will first find the model weight in `MODEL_HUB_PATH`, if it does not
 
 Notice: the models can be loadded on startup or on the fly.
 
-### 4. Start server with OpenAI.mini
+### 5. Start server with OpenAI.mini
 ``` shell
-python3 -m src.api &
-python3 -m app.server &
-```
-or
-``` shell
-make run
+python3 -m src.api
+python3 -m app.server
 ```
 
-### 5. Access the OpenAI.mini services
+### 6. Access the OpenAI.mini services
 OpenAI.mini have implemented most APIs of the OpenAI platform and also a ChatGPT-like web frontend.
 You may access the OpenAI.mini services with the [openai libraries]() or chat with the models in the web frontend.
 - Access as a openai service: You can use openai packages or the Langchain library to access it by setting the `openai.api_base="YOUR_OWN_IP:8000/api/v1"` and `openai.api_key="none_or_any_other_string". Find more detail [examples](https://github.com/huajianmao/openai.mini/tree/master#example-code) here.
@@ -102,12 +124,10 @@ You may access the OpenAI.mini services with the [openai libraries]() or chat wi
 | Files             | [Delete file](https://platform.openai.com/docs/api-reference/files/delete)                             | ✅ Done          |                         |
 | Files             | [Retrieve file](https://platform.openai.com/docs/api-reference/files/retrieve)                         | ✅ Done          |                         |
 | Files             | [Retrieve file content](https://platform.openai.com/docs/api-reference/files/retrieve-content)         | ✅ Done          |                         |
-| Fine-tunes        | [Create fine-tune](https://platform.openai.com/docs/api-reference/fine-tunes/create)                   |                  |                         |
-| Fine-tunes        | [List fine-tunes](https://platform.openai.com/docs/api-reference/fine-tunes/list)                      |                  |                         |
-| Fine-tunes        | [Retrieve fine-tune](https://platform.openai.com/docs/api-reference/fine-tunes/retrieve)               |                  |                         |
-| Fine-tunes        | [Cancel fine-tune](https://platform.openai.com/docs/api-reference/fine-tunes/cancel)                   |                  |                         |
-| Fine-tunes        | [List fine-tune events](https://platform.openai.com/docs/api-reference/fine-tunes/events)              |                  |                         |
-| Fine-tunes        | [Delete fine-tune model](https://platform.openai.com/docs/api-reference/fine-tunes/delete-model)       |                  |                         |
+| Fine-tuning       | [Create fine-tuning job](https://platform.openai.com/docs/api-reference/fine-tuning/create)                   |                  |                         |
+| Fine-tuning       | [Retrieve fine-tuning job](https://platform.openai.com/docs/api-reference/fine-tuning/retrieve)               |                  |                         |
+| Fine-tuning       | [Cancel fine-tuning](https://platform.openai.com/docs/api-reference/fine-tuning/cancel)                   |                  |                         |
+| Fine-tuning       | [List fine-tuning events](https://platform.openai.com/docs/api-reference/fine-tuning/list-events)              |                  |                         |                         |
 | Moderations       | [Create moderation](https://platform.openai.com/docs/api-reference/moderations/create)                 |                  |                         |
 | Edits             | [Create edit](https://platform.openai.com/docs/api-reference/edits/create)                             |                  |                         |
 
