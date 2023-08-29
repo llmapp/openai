@@ -48,23 +48,6 @@ class ChatFunction(BaseModel):
     parameters: dict
 
 
-class CompletionRequest(BaseModel):
-    model: str
-    prompt: Union[str, List[str]]
-    suffix: Optional[str] = None
-    temperature: Optional[float] = 0.7
-    n: Optional[int] = 1
-    max_tokens: Optional[int] = None
-    stop: Optional[Union[str, List[str]]] = None
-    stream: Optional[bool] = False
-    top_p: Optional[float] = 1.0
-    logprobs: Optional[int] = None
-    echo: Optional[bool] = False
-    presence_penalty: Optional[float] = 0.0
-    frequency_penalty: Optional[float] = 0.0
-    user: Optional[str] = None
-
-
 class ChatCompletionRequest(BaseModel):
     model: str
     messages: List[ChatMessage]

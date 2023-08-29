@@ -20,7 +20,8 @@ async def chat_completions(request: ChatCompletionRequest):
     
     with_function_call = need_function_call(messages=request.messages, functions=request.functions)
     if with_function_call and model.org != "Qwen":
-        raise HTTPException(status_code=400, detail="Invalid request format: functions only supported by Qwen-7B-Chat")
+        with_function_call = False
+        # raise HTTPException(status_code=400, detail="Invalid request format: functions only supported by Qwen-7B-Chat")
 
     kwargs = _gen_kwargs(request, model.tokenizer)
     messages = request.messages
