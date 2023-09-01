@@ -8,6 +8,7 @@ import type { Message } from "./types";
 const UserInput = (props: UserInputProps) => {
   const { value, messages, onSend } = props;
 
+  const [withIME, setWithIME] = useState<boolean>(false);
   const [input, setInput] = useState(value ?? "");
   const textarea = useRef<HTMLTextAreaElement>(null);
 
@@ -49,11 +50,14 @@ const UserInput = (props: UserInputProps) => {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
+            if (e.key === "Enter" && !withIME && !e.shiftKey) {
               e.preventDefault();
               sendMessage();
+              e.stopPropagation();
             }
           }}
+          onCompositionStart={() => setWithIME(true)}
+          onCompositionEnd={() => setWithIME(false)}
         />
         <div onClick={sendMessage} className="absolute bottom-4 right-4 text-gray-400 cursor-pointer">
           <Icon name="send" size={26} color={input.length > 0 ? "green" : ""} />
