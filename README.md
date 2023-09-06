@@ -60,7 +60,8 @@ OpenAI.mini will first find the model weight in `MODEL_HUB_PATH`, if it does not
 .
 ├── baichuan-inc
 │   ├── Baichuan-13B-Base
-│   └── Baichuan-13B-Chat
+│   ├── Baichuan-13B-Chat
+│   └── Baichuan2-13B-Chat
 ├── intfloat
 │   ├── e5-large-v2
 │   └── multilingual-e5-large
@@ -136,6 +137,7 @@ You may access the OpenAI.mini services with the [openai libraries]() or chat wi
 | Model                                                                                 | #Params | Checkpoint link                                                                         |
 | :------------------------------------------------------------------------------------ | :------ | :-------------------------------------------------------------------------------------- |
 | [FreeWilly2](https://stability.ai/blog/freewilly-large-instruction-fine-tuned-models) | 70B     | [stabilityai/FreeWilly2](https://huggingface.co/stabilityai/FreeWilly2)                 |
+| [Baichuan2-13B-Chat](https://github.com/baichuan-inc/Baichuan2-13B)                     | 13B     | [baichuan-inc/Baichuan2-13B-Chat](https://huggingface.co/baichuan-inc/Baichuan2-13B-Chat) |
 | [Baichuan-13B-Chat](https://github.com/baichuan-inc/Baichuan-13B)                     | 13B     | [baichuan-inc/Baichuan-13B-Chat](https://huggingface.co/baichuan-inc/Baichuan-13B-Chat) |
 | [Llama-2-13b-chat-hf](https://github.com/facebookresearch/llama)                      | 13B     | [meta-llama/Llama-2-13b-chat-hf](https://huggingface.co/meta-llama/Llama-2-13b-chat-hf) |
 | [Llama-2-7b-chat-hf](https://github.com/facebookresearch/llama)                       | 7B      | [meta-llama/Llama-2-7b-chat-hf](https://huggingface.co/meta-llama/Llama-2-7b-chat-hf)   |
@@ -184,7 +186,7 @@ openai.api_base = "http://localhost:8000/api/v1"
 openai.api_key = "none"
 
 for chunk in openai.ChatCompletion.create(
-    model="Baichuan-13B-Chat",
+    model="Baichuan2-13B-Chat",
     messages=[{"role": "user", "content": "Which moutain is the second highest one in the world?"}],
     stream=True
 ):
@@ -201,7 +203,7 @@ openai.api_base = "http://localhost:8000/api/v1"
 openai.api_key = "none"
 
 resp = openai.ChatCompletion.create(
-    model="Baichuan-13B-Chat",
+    model="Baichuan2-13B-Chat",
     messages = [{ "role":"user", "content": "Which moutain is the second highest one in the world?" }]
 )
 print(resp.choices[0].message.content)

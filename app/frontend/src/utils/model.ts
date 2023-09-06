@@ -7,6 +7,12 @@ const models: Record<string, ModelCard> = {
     homepage: "https://github.com/THUDM/ChatGLM2-6B",
     favicon: "/assets/avatars/chatglm.png",
   },
+  "baichuan2-13b": {
+    id: "Baichuan2-13B-Chat",
+    name: "Baichuan2-13B",
+    homepage: "https://huggingface.co/baichuan-inc/Baichuan2-13B-Chat",
+    favicon: "/assets/avatars/baichuan.png",
+  },
   "baichuan-13b": {
     id: "Baichuan-13B-Chat",
     name: "Baichuan-13B",

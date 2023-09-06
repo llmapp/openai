@@ -13,6 +13,7 @@ _MODELS = [
     InternLM("internlm/internlm-chat-7b"),
     InternLM("internlm/internlm-chat-7b-8k"),
     Baichuan("baichuan-inc/Baichuan-13B-Chat", model_args={"torch_dtype": torch.float16, "device_map": "auto"}),
+    Baichuan("baichuan-inc/Baichuan2-13B-Chat", model_args={"torch_dtype": torch.bfloat16, "device_map": "auto"}),
     LLaMA("meta-llama/Llama-2-7b-chat-hf", model_args={"torch_dtype": torch.float16}),
     LLaMA("meta-llama/Llama-2-13b-chat-hf", model_args={"torch_dtype": torch.float16}),
     LLaMA("stabilityai/FreeWilly2", model_args={"torch_dtype": torch.float16, "low_cpu_mem_usage": True, "device_map": "auto"}),
