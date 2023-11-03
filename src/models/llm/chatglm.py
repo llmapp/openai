@@ -22,7 +22,13 @@ class ChatGLM(LlmModel):
 
     def chat(self, messages: List[ChatMessage], stream: Optional[bool] = False, **kwargs):
         if stream:
-            query, history = split_messages(messages)
+            # ChatGLM3 uses a different chat format
+            # ref: https://github.com/THUDM/ChatGLM3/blob/main/PROMPT_en.md
+            if self.id == 'chatglm3-6b':
+                query, history = messages[-1].content,messages[:-1]
+                history = [{'role': h.role, 'content': h.content} for h in history]
+            else:
+                query, history = split_messages(messages)
             response = self.model.stream_chat(self.tokenizer, query, history) #, **kwargs)
             return response, "tuple"
         else:
