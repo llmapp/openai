@@ -26,4 +26,4 @@ class ChatGLM(LlmModel):
             response = self.model.stream_chat(self.tokenizer, query, history) #, **kwargs)
             return response, "tuple"
         else:
-            return super().chat(messages, stream) #, **kwargs)
+            return super().chat(messages, stream=stream)  # , **kwargs)
