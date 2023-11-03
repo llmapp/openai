@@ -42,7 +42,7 @@ class LlmModel(Model):
         return self
 
 
-    def chat(self, messages: List[str], functions: Optional[List[ChatFunction]] = None, stream: Optional[bool] = False, **kwargs):
+    def chat(self, messages: List[ChatMessage], functions: Optional[List[ChatFunction]] = None, stream: Optional[bool] = False, **kwargs):
         query, history = split_messages(messages)
         if stream:
             response = self.model.chat(self.tokenizer, query, history=history, functions=functions, stream=True) #, **kwargs)
