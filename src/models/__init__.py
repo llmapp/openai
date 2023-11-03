@@ -10,6 +10,7 @@ from .llm import Baichuan, ChatGLM, InternLM, LLaMA, Qwen, Xverse
 _MODELS = [
     ChatGLM("THUDM/chatglm-6b"),
     ChatGLM("THUDM/chatglm2-6b"),
+    ChatGLM("THUDM/chatglm3-6b"),
     InternLM("internlm/internlm-chat-7b"),
     InternLM("internlm/internlm-chat-7b-8k"),
     Baichuan("baichuan-inc/Baichuan-13B-Chat", model_args={"torch_dtype": torch.float16, "device_map": "auto"}),
@@ -38,11 +39,11 @@ _LOADED_MODELS = {}
 def get_model(model_id: str, skip_load: bool = False):
     if len(model_id.split("/")) > 2:
         raise HTTPException(status_code=400, detail=f"Invalid model id format {model_id}, should be <id> or <org>/<id> like gpt-3.5-turbo or openai/gpt-3.5-turbo")
-    
+
     model = next((m for m in _MODELS if m.id == model_id or f"{m.org}/{m.id}" == model_id), None)
     if model is None:
         raise HTTPException(status_code=404, detail=f"Model {model_id} not supported!")
-    
+
     if skip_load:
         return model
 
@@ -53,7 +54,7 @@ def get_model(model_id: str, skip_load: bool = False):
         model.load()
         loaded = model
         _LOADED_MODELS[model.id] = model
-    
+
     return loaded
 
 def list():
