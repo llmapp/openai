@@ -51,7 +51,7 @@ class ChatFunction(BaseModel):
 class ChatCompletionRequest(BaseModel):
     model: str
     messages: List[ChatMessage]
-    temperature: Optional[float] = None
+    temperature: Optional[float] = 0.1
     top_p: Optional[float] = 1
     n: Optional[int] = 1
     max_tokens: Optional[int] = None
