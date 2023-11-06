@@ -8,6 +8,7 @@ from ..models.llm import LlmModel
 from ..type import ChatCompletionRequest, ChatCompletionResponse, ChatCompletionResponseChoice, ChatCompletionResponseStreamChoice, ChatMessage, DeltaMessage, FunctionCallResponse, UsageInfo
 from ..utils.request import raise_if_invalid_model
 from ..utils.function_call import need_function_call, build_chat_message, build_function_call_messages, build_fc_args_message, build_fc_name_message
+from ..utils.token import num_tokens_from_messages
 
 
 chat_router = APIRouter(prefix="/chat")
@@ -17,7 +18,7 @@ chat_router = APIRouter(prefix="/chat")
 async def chat_completions(request: ChatCompletionRequest):
     model = get_model(request.model)
     raise_if_invalid_model(model, LlmModel)
-    
+
     with_function_call = need_function_call(messages=request.messages, functions=request.functions)
     if with_function_call and model.org != "Qwen":
         with_function_call = False
@@ -29,22 +30,25 @@ async def chat_completions(request: ChatCompletionRequest):
         messages = build_function_call_messages(request.messages, request.functions)
         stop_words_ids = [model.tokenizer.encode(word) for word in ["Observation:", "Observation:\n"]]
         kwargs.update({"stop_words_ids": stop_words_ids})
+    prompt_tokens = num_tokens_from_messages([{"role": m.role, "content": m.content} for m in messages])
 
-    response, extra = model.chat(messages, stream=request.stream, **kwargs)
+    response, extra = model.chat(messages, stream=request.stream,temperature=request.temperature,top_p=request.top_p, **kwargs)
     if request.stream:
         predict = _predict(model.id, response, extra, with_function_call)
         return EventSourceResponse(predict, media_type="text/event-stream")
     else:
         finish_reason = "stop"
-
+        completion_tokens = num_tokens_from_messages([{"role": "assistant", "content": response}])
+        total_tokens = completion_tokens + prompt_tokens
+        # FIXME: usage,用gpt3.5来估算
+        usage = UsageInfo(prompt_tokens=prompt_tokens, total_tokens=total_tokens, completion_tokens=completion_tokens,)
         if with_function_call:
             message, finish_reason = build_chat_message(response)
         else:
             message=ChatMessage(role="assistant", content=response)
 
         choice_data = ChatCompletionResponseChoice( index=0, message=message, finish_reason=finish_reason)
-        # FIXME: usage
-        usage = UsageInfo()
+
         return ChatCompletionResponse(model=model.id, choices=[choice_data], object="chat.completion", usage=usage)
 
 
