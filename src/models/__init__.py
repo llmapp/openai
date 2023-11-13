@@ -19,6 +19,7 @@ _MODELS = [
     LLaMA("meta-llama/Llama-2-13b-chat-hf", model_args={"torch_dtype": torch.float16}),
     LLaMA("stabilityai/FreeWilly2", model_args={"torch_dtype": torch.float16, "low_cpu_mem_usage": True, "device_map": "auto"}),
     Qwen("Qwen/Qwen-7B-Chat", owner="Alibaba Cloud"),
+    Qwen("Qwen/Qwen-14B-Chat", owner="Alibaba Cloud"),
     Xverse("xverse/XVERSE-13B-Chat", model_args={"torch_dtype": torch.bfloat16}),
 
     AudioModel("openai/whisper-large-v2"),
