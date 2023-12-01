@@ -30,25 +30,22 @@ logger = get_logger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    print("Starting up...")
+
     yield
 
-    gc.collect()
+    print("Shutting down...")
 
+    gc.collect()
     if torch.cuda.is_available():
         torch.cuda.empty_cache()
         torch.cuda.ipc_collect()
-
     if torch.backends.mps.is_available():
         torch.mps.empty_cache()
 
 api = FastAPI(lifespan=lifespan)
 
 add_cors_middleware(api)
-
-
-@api.on_event("startup")
-async def startup_event():
-    print("Starting up...")
 
 prefix = os.environ.get('API_PREFIX', "/api/v1")
 api.include_router(audio_router, prefix=prefix, tags=["Audio"])
@@ -64,11 +61,6 @@ if not os.path.exists(IMAGE_FOLDER):
     os.makedirs(IMAGE_FOLDER)
 api.mount("/images", StaticFiles(directory=IMAGE_FOLDER), name="images")
 # api.mount("/", StaticFiles(directory="./web"), name="homepage")
-
-
-@api.on_event("shutdown")
-async def shutdown_event():
-    print("Shutting down...")
 
 
 @api.exception_handler(HTTPException)

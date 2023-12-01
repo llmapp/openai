@@ -33,27 +33,20 @@ def add_cors_middleware(app):
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):  # collects GPU memory
+    print("Starting up...")
     yield
+    print("Shutting down...")
 
 api = FastAPI(lifespan=lifespan)
 
 add_cors_middleware(api)
 
 
-@api.on_event("startup")
-async def startup_event():
-    print("Starting up...")
-
 prefix = os.environ.get('API_PREFIX', "/api/v1")
 api.include_router(plugin_router, prefix=prefix)
 api.include_router(chat_router, prefix=prefix)
 
 api.mount("/", StaticFiles(directory="./app/frontend/dist", html=True), name="homepage")
-
-
-@api.on_event("shutdown")
-async def shutdown_event():
-    print("Shutting down...")
 
 
 @api.exception_handler(HTTPException)

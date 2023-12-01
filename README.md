@@ -76,7 +76,8 @@ OpenAI.mini will first find the model weight in `MODEL_HUB_PATH`, if it does not
 │   ├── small.pt
 │   └── tiny.pt
 ├── Qwen
-│   └── Qwen-7B-Chat
+│   ├── Qwen-7B-Chat
+│   └── Qwen-72B-Chat 
 ├── stabilityai
 │   ├── FreeWilly2
 │   ├── stable-diffusion-xl-base-0.9
@@ -142,7 +143,9 @@ You may access the OpenAI.mini services with the [openai libraries]() or chat wi
 | [Baichuan-13B-Chat](https://github.com/baichuan-inc/Baichuan-13B)                     | 13B     | [baichuan-inc/Baichuan-13B-Chat](https://huggingface.co/baichuan-inc/Baichuan-13B-Chat) |
 | [Llama-2-13b-chat-hf](https://github.com/facebookresearch/llama)                      | 13B     | [meta-llama/Llama-2-13b-chat-hf](https://huggingface.co/meta-llama/Llama-2-13b-chat-hf) |
 | [Llama-2-7b-chat-hf](https://github.com/facebookresearch/llama)                       | 7B      | [meta-llama/Llama-2-7b-chat-hf](https://huggingface.co/meta-llama/Llama-2-7b-chat-hf)   |
-| [Qwen-7B-Chat](https://github.com/QwenLM/Qwen-7B) | 7B     | [Qwen/Qwen-7B-Chat](https://huggingface.co/Qwen/Qwen-7B-Chat)                 |
+| [Qwen-72B-Chat](https://github.com/QwenLM/Qwen) | 72B     | [Qwen/Qwen-72B-Chat](https://huggingface.co/Qwen/Qwen-72B-Chat)                 |
+| [Qwen-7B-Chat](https://github.com/QwenLM/Qwen) | 7B     | [Qwen/Qwen-7B-Chat](https://huggingface.co/Qwen/Qwen-7B-Chat)                 |
+| [Qwen-1_8B-Chat](https://github.com/QwenLM/Qwen) | 1.8B     | [Qwen/Qwen-1_8B-Chat](https://huggingface.co/Qwen/Qwen-1_8B-Chat)                 |
 | [internlm-chat-7b](https://github.com/InternLM/InternLM)                              | 7B      | [internlm/internlm-chat-7b](https://huggingface.co/internlm/internlm-chat-7b)           |
 | [chatglm3-6b](https://github.com/THUDM/ChatGLM3-6B)                                   | 6B      | [THUDM/chatglm3-6b](https://huggingface.co/THUDM/chatglm3-6b)                             |
 | [chatglm2-6b](https://github.com/THUDM/ChatGLM2-6B)                                   | 6B      | [THUDM/chatglm2-6b](https://huggingface.co/THUDM/chatglm2-6b)                           |

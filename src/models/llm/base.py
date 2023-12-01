@@ -21,8 +21,8 @@ class LlmModel(Model):
         super().__init__(model, name, owner)
         self.stream_type = stream_type
 
-        default_tokenizer_args = { "use_fast": False, "trust_remote_code": True }
-        default_model_args = { "device_map": "cuda", "trust_remote_code": True }
+        default_tokenizer_args = { "trust_remote_code": True }
+        default_model_args = { "device_map": "auto", "trust_remote_code": True }
         default_generation_config = { "trust_remote_code": True }
 
         self.model_args = {**default_model_args, **model_args}

@@ -7,7 +7,7 @@ sentence-transformers
 sse-starlette
 tiktoken
 torch>=2.0
-transformers==4.31.0
+transformers==4.35.0
 transformers_stream_generator==0.0.4
 uvicorn
 sentencepiece
@@ -15,6 +15,9 @@ accelerate>=0.20.3
 
 # for QWen model
 einops
+scipy
+peft
+deepspeed
 
 # for Stable Diffusion
 diffusers

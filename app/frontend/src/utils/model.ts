@@ -37,6 +37,12 @@ const models: Record<string, ModelCard> = {
     homepage: "https://github.com/QwenLM/Qwen",
     favicon: "/assets/avatars/qwen.webp",
   },
+  "qwen-72b": {
+    id: "Qwen-72B-Chat",
+    name: "Qwen-72B-Chat",
+    homepage: "https://github.com/QwenLM/Qwen",
+    favicon: "/assets/avatars/qwen.webp",
+  },
   "llama2-13b": {
     id: "Llama-2-13b-chat",
     name: "Llama2-13B-Chat",
