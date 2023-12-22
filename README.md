@@ -1,4 +1,8 @@
-#  [WIP] OpenAI.mini
+#  [Deprecated] OpenAI.mini
+
+As the OpenAI APIs continue to advance at a swift pace, I foresee challenges in dedicating the necessary time to maintain this repository effectively. Regrettably, I might not be able to sustain the level of commitment required to ensure its upkeep going forward. Your understanding and support in this matter would be greatly appreciated. Thank you for your understanding.
+
+----
 
 This repo implements OpenAI APIs with open source models, for example, open source LLMs for [chat](https://platform.openai.com/docs/api-reference/chat), `Whisper` for [audio](https://platform.openai.com/docs/api-reference/audio), `SDXL` for [image](https://platform.openai.com/docs/api-reference/images) and so on. With this repo, you can interact with LLMs using the [`openai` libraries](https://platform.openai.com/docs/api-reference) or the [`LangChain`](https://python.langchain.com/) library.
 
