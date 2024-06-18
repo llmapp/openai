@@ -6,7 +6,7 @@ from ..base import Model
 from src.utils.env import compose_model_id
 from src.type import ChatMessage, ChatFunction
 
-StreamType = Literal["tuple", "string"]
+StreamType = Optional[Literal["tuple", "string", "delta"]]
 
 class LlmModel(Model):
     model: Any

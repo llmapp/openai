@@ -7,8 +7,8 @@ sentence-transformers
 sse-starlette
 tiktoken
 torch>=2.0
-transformers==4.35.0
-transformers_stream_generator==0.0.4
+transformers==4.37.2
+transformers_stream_generator==0.0.5
 uvicorn
 sentencepiece
 accelerate>=0.20.3

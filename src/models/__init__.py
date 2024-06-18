@@ -4,7 +4,7 @@ from fastapi import HTTPException
 from .audio import AudioModel
 from .embedding import EmbeddingModel
 from .image import ImageModel
-from .llm import Baichuan, ChatGLM, InternLM, LLaMA, Qwen, Xverse
+from .llm import Baichuan, ChatGLM, InternLM, LLaMA, Qwen, Qwen2, Xverse
 
 
 _MODELS = [
@@ -22,6 +22,7 @@ _MODELS = [
     Qwen("Qwen/Qwen-7B-Chat", owner="Alibaba Cloud"),
     Qwen("Qwen/Qwen-14B-Chat", owner="Alibaba Cloud"),
     Qwen("Qwen/Qwen-72B-Chat", owner="Alibaba Cloud", model_args={"bf16": True}),
+    Qwen2("Qwen/Qwen2-72B-Instruct", owner="Alibaba Cloud", model_args={"torch_dtype": "auto"}, stream_type="delta"),
     Xverse("xverse/XVERSE-13B-Chat", model_args={"torch_dtype": torch.bfloat16}),
 
     AudioModel("openai/whisper-large-v2"),
